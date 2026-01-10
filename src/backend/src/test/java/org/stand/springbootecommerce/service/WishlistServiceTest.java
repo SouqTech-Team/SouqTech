@@ -61,7 +61,7 @@ class WishlistServiceTest {
         wishlist.setId(1L);
         wishlist.setUser(user);
         wishlist.setShareToken("test-token-123");
-        wishlist.setIsPublic(false);
+        wishlist.setPublic(false);
         ReflectionTestUtils.setField(wishlistService, "self", wishlistService);
     }
 
@@ -178,7 +178,7 @@ class WishlistServiceTest {
     @DisplayName("Doit récupérer une wishlist partagée publique")
     void getSharedWishlist_Success() {
         // Arrange
-        wishlist.setIsPublic(true);
+        wishlist.setPublic(true);
         when(wishlistRepository.findByShareToken("test-token-123")).thenReturn(Optional.of(wishlist));
 
         // Act
@@ -193,7 +193,7 @@ class WishlistServiceTest {
     @DisplayName("Doit lancer une exception si la wishlist partagée est privée")
     void getSharedWishlist_Private() {
         // Arrange
-        wishlist.setIsPublic(false);
+        wishlist.setPublic(false);
         when(wishlistRepository.findByShareToken("test-token-123")).thenReturn(Optional.of(wishlist));
 
         // Act & Assert

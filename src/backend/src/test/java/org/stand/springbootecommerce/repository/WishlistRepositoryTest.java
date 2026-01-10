@@ -62,7 +62,7 @@ class WishlistRepositoryTest {
         // Créer une wishlist
         wishlist = new Wishlist();
         wishlist.setUser(user);
-        wishlist.setIsPublic(true);
+        wishlist.setPublic(true);
         wishlist.setShareToken("abc123");
         wishlist.getProducts().add(product);
         entityManager.persist(wishlist);
@@ -94,7 +94,7 @@ class WishlistRepositoryTest {
 
         assertThat(foundWishlist).isPresent();
         assertThat(foundWishlist.get().getShareToken()).isEqualTo("abc123");
-        assertThat(foundWishlist.get().getIsPublic()).isTrue();
+        assertThat(foundWishlist.get().isPublic()).isTrue();
     }
 
     @Test

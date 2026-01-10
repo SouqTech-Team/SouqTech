@@ -34,7 +34,7 @@ public class Wishlist {
     private Set<Product> products = new HashSet<>();
 
     @Column(name = "is_public")
-    private Boolean isPublic = false;
+    private boolean isPublic = false;
 
     @Column(name = "share_token", unique = true)
     private String shareToken; // Pour partager la wishlist

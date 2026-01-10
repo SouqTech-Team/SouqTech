@@ -84,7 +84,7 @@ public class WishlistService {
     @Transactional
     public Wishlist togglePublicSharing(Long userId) {
         Wishlist wishlist = self.getOrCreateWishlist(userId);
-        wishlist.setIsPublic(!wishlist.getIsPublic());
+        wishlist.setPublic(!wishlist.isPublic());
         if (wishlist.getShareToken() == null) {
             wishlist.setShareToken(UUID.randomUUID().toString());
         }
@@ -98,7 +98,7 @@ public class WishlistService {
         Wishlist wishlist = wishlistRepository.findByShareToken(shareToken)
                 .orElseThrow(() -> new BaseException("Wishlist introuvable"));
 
-        if (!wishlist.getIsPublic()) {
+        if (!wishlist.isPublic()) {
             throw new BaseException("Cette wishlist est privée");
         }
         return wishlist;
