@@ -1,0 +1,16 @@
+<app-sidenav-layout>
+    <!-- HEADER -->
+    <header>
+        <app-header [brandName]="brandName"></app-header>
+    </header>
+    <!-- MAIN -->
+    <main>
+        <div class="body mat-elevation-z2">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+    <!-- FOOTER -->
+    <footer>
+        <app-footer [brandName]="brandName"></app-footer>
+    </footer>   
+</app-sidenav-layout>

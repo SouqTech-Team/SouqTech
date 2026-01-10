@@ -1,0 +1,133 @@
+<mat-toolbar class="glass-header">
+  <!-- BRAND -->
+  <div class="brand-section" routerLink="/">
+    <mat-icon class="text-gradient brand-icon" fontIcon="local_mall"></mat-icon>
+    <span class="text-gradient brand-name">{{ brandName }}</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <!-- NAV DESKTOP -->
+  <nav class="nav-desktop">
+    <a mat-button routerLink="/home" routerLinkActive="active" class="nav-link">
+      <mat-icon>home</mat-icon> Home
+    </a>
+    <a mat-button routerLink="/products" routerLinkActive="active" class="nav-link">
+      <mat-icon>store</mat-icon> Products
+    </a>
+    <a mat-button routerLink="/about" routerLinkActive="active" class="nav-link">
+      <mat-icon>info</mat-icon> About
+    </a>
+  </nav>
+
+  <!-- SEARCH BAR -->
+  <div class="search-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="Search products..." [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange($event)" (keyup.enter)="onSearch()">
+      <button mat-icon-button matSuffix *ngIf="searchQuery" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <span class="spacer"></span>
+
+  <!-- RIGHT SECTION -->
+  <div class="auth-section">
+
+    <!-- NOT LOGGED -->
+    <div class="auth-buttons" *appIsLogged="false">
+      <a mat-stroked-button color="primary" routerLink="/authenticate" class="login-btn">
+        Log In
+      </a>
+      <a mat-raised-button color="primary" routerLink="/authenticate" class="signup-btn btn-gradient">
+        Sign Up
+      </a>
+    </div>
+
+    <!-- LOGGED IN -->
+    <div class="user-menu" *appIsLogged="true">
+      <div class="user-info">
+        <span class="welcome-text">Welcome back,</span>
+        <span class="user-name">{{((currentUser$ | async)?.name | titlecase) || "User"}}</span>
+      </div>
+
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="profile-btn">
+        <mat-icon class="text-gradient">account_circle</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu" xPosition="before" class="custom-menu">
+        <button mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </button>
+        <button mat-menu-item routerLink="/wishlist">
+          <mat-icon color="warn">favorite</mat-icon>
+          <span>My Wishlist</span>
+        </button>
+        <button mat-menu-item routerLink="/settings">
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon color="warn">logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    <!-- CART WITH MINI-PANIER -->
+    <div class="cart-section" style="margin-left: 16px;">
+      <button mat-button class="cart-btn" [matMenuTriggerFor]="cartMenu"
+        [matBadge]="(this.cartService.cart$ | async)?.quantity" matBadgePosition="before" matBadgeColor="accent">
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="cart-text">Cart</span>
+      </button>
+
+      <mat-menu #cartMenu="matMenu" xPosition="before" class="mini-cart-menu">
+        <div class="mini-cart-content" (click)="$event.stopPropagation()">
+          <h3 class="mini-cart-title">Your Cart</h3>
+          <mat-divider></mat-divider>
+
+          <div class="mini-cart-items" *ngIf="(this.cartService.cart$ | async)?.items?.length; else emptyCart">
+            <div class="mini-cart-item" *ngFor="let item of (this.cartService.cart$ | async)?.items">
+              <img [src]="item.product.image" [alt]="item.product.name" class="mini-item-img">
+              <div class="mini-item-info">
+                <div class="mini-item-name">{{item.product.name}}</div>
+                <div class="mini-item-details">
+                  <span class="mini-item-qty">{{item.quantity}}x</span>
+                  <span class="mini-item-price">{{item.product.price | currency:'EUR'}}</span>
+                </div>
+              </div>
+              <button mat-icon-button color="warn" (click)="cartService.removeItemById(item.product.id)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <ng-template #emptyCart>
+            <div class="empty-mini-cart">
+              <mat-icon>shopping_cart_off</mat-icon>
+              <p>Your cart is empty</p>
+            </div>
+          </ng-template>
+
+          <mat-divider></mat-divider>
+
+          <div class="mini-cart-footer" *ngIf="(this.cartService.cart$ | async)?.items?.length">
+            <div class="mini-total">
+              <span>Total:</span>
+              <span class="total-amount">{{(this.cartService.cart$ | async)?.total | currency:'EUR'}}</span>
+            </div>
+            <button mat-raised-button color="primary" class="checkout-btn btn-gradient" routerLink="/cart">
+              Checkout
+            </button>
+          </div>
+        </div>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

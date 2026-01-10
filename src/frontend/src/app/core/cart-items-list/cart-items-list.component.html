@@ -1,0 +1,9 @@
+<div class="item-list">
+    <app-cart-item 
+        *ngFor="let item of items"
+        [item]="item"
+        (removeItemEvent)="this.removeItemEvent.emit(item.product.id)"
+        (selectItemEvent)="this.selectItemEvent.emit(item.product.id)"
+        >
+    </app-cart-item>
+</div>

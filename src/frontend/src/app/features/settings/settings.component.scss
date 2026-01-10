@@ -1,0 +1,38 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+mat-form-field,
+button {
+    width: 100%;
+}
+
+mat-form-field {
+    margin-bottom: 1rem;
+}
+
+.button-logout {
+    margin-top: 2rem;
+}
+
+mat-card {
+    max-width: 400px;
+    box-sizing: border-box;
+    background: rgb(255, 255, 255, .8); // TODO: theming
+}
+
+mat-card-content {
+    padding: 2rem;
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+}
+
+mat-icon {
+    transform: scale(1.5);
+    margin-right: 10px;
+}

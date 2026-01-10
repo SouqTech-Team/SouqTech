@@ -1,0 +1,186 @@
+<div class="products-page" *ngIf="{ products: products$ | async } as data">
+  <!-- HERO SECTION -->
+  <div class="hero-section">
+    <div class="mesh-gradient"></div>
+    <div class="container hero-content">
+      <div class="animate-up">
+        <h1>Nos Collections Tech</h1>
+        <p>Le futur de l'innovation, disponible dès aujourd'hui en Tunisie.</p>
+      </div>
+
+      <div class="search-entry-container animate-up" style="--delay: 0.1s">
+        <app-search-bar (newQueryEvent)="handleQueryEvent($event)"></app-search-bar>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="products-main-layout">
+
+      <!-- SIDEBAR FILTERS -->
+      <aside class="sidebar animate-fade-in-left">
+        <div class="filter-card">
+          <h3><mat-icon>tune</mat-icon> Filtrer par</h3>
+
+          <!-- CATEGORIES -->
+          <div class="filter-section">
+            <span class="section-label">Catégories</span>
+            <div class="category-list">
+              <div class="cat-item" [class.active]="!selectedCategory$.value" (click)="selectedCategory$.next(null)">
+                <span>Toutes les catégories</span>
+              </div>
+              <div class="cat-item" *ngFor="let cat of (productCategoryService.productCategories$ | async)"
+                [class.active]="selectedCategory$.value === cat.id" (click)="selectedCategory$.next(cat.id)">
+                <span>{{ cat.name }}</span>
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px;">chevron_right</mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <mat-divider style="margin: 2rem 0;"></mat-divider>
+
+          <!-- SORTING -->
+          <div class="filter-section">
+            <span class="section-label">Trier par</span>
+            <div class="sort-select-wrapper">
+              <mat-form-field appearance="outline" class="minimal-select">
+                <mat-icon matPrefix>sort</mat-icon>
+                <mat-select [value]="sortBy$.value" (selectionChange)="sortBy$.next($event.value)">
+                  <mat-option value="name,asc">Nom (A-Z)</mat-option>
+                  <mat-option value="name,desc">Nom (Z-A)</mat-option>
+                  <mat-option value="price,asc">Prix croissant</mat-option>
+                  <mat-option value="price,desc">Prix décroissant</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- PROMO BANNER -->
+          <div class="sidebar-promo card-shine"
+            style="background: #1a1a1a; padding: 1.5rem; border-radius: 20px; color: #fff; margin-top: 2rem;">
+            <p style="font-weight: 800; margin: 0; color: #673ab7;">SOUQTECH PLUS</p>
+            <p style="font-size: 0.8rem; margin: 0.5rem 0 1rem; opacity: 0.8;">Livraison gratuite sur tout le catalogue
+              jusqu'à dimanche !</p>
+            <button mat-button style="color: #fff; border: 1px solid #444; width: 100%;">En savoir plus</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RESULTS COLUMN -->
+      <main class="results-column animate-fade-in">
+
+        <!-- SEARCH STATUS -->
+        <div class="result-info" *ngIf="!(loadingStatus$ | async)">
+          <div class="status-left">
+            <h3 *ngIf="query$ | async as q">Résultats pour <span class="highlight">"{{q}}"</span></h3>
+            <h3 *ngIf="!(query$ | async)">Exploration de <span class="highlight">Tous les produits</span></h3>
+          </div>
+          <p>{{ length }} article{{ length > 1 ? 's' : '' }} prêt{{ length > 1 ? 's' : '' }}</p>
+        </div>
+
+        <!-- PRODUCTS GRID -->
+        <div class="products-grid">
+
+          <!-- SKELETONS -->
+          <ng-container *ngIf="loadingStatus$ | async">
+            <div *ngFor="let i of [1,2,3,4,5,6]" class="product-card skeleton-card">
+              <div class="skeleton-img"></div>
+              <div class="product-content">
+                <div class="skeleton-text" style="width: 40%"></div>
+                <div class="skeleton-text" style="width: 80%"></div>
+                <div class="skeleton-text" style="width: 60%"></div>
+              </div>
+              <div class="product-actions">
+                <div class="skeleton-price"></div>
+                <div class="skeleton-price" style="width: 48px; height: 48px; border-radius: 14px;"></div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ACTUAL PRODUCTS -->
+          <ng-container *ngIf="!(loadingStatus$ | async)">
+            <mat-card *ngFor="let product of data.products; let i = index" class="product-card animate-up"
+              [style.--delay]="(i * 0.05) + 's'">
+
+              <!-- WISHLIST BTN -->
+              <button mat-icon-button class="wishlist-btn" (click)="addToWishlist($event, product.id)"
+                matTooltip="Ajouter aux favoris">
+                <mat-icon>favorite_border</mat-icon>
+              </button>
+
+              <!-- IMAGE -->
+              <div class="product-image-container" (click)="selectProduct(product.id)">
+                <!-- BADGES -->
+                <div class="product-badges">
+                  <span *ngIf="product.quantity < 5 && product.quantity > 0" class="badge low-stock">Stock limité
+                    ({{product.quantity}})</span>
+                  <span *ngIf="product.quantity === 0" class="badge out-of-stock">Indisponible</span>
+                  <span class="badge new">Nouveau</span>
+                  <span class="badge warranty"
+                    style="background: #fff; color: #673ab7; border: 1px solid #673ab7;">Garantie 1 An</span>
+                </div>
+
+                <img [src]="product.image" [alt]="product.name">
+
+                <div class="image-overlay">
+                  <div class="view-badge">
+                    <mat-icon>visibility</mat-icon>
+                    Explorer
+                  </div>
+                </div>
+              </div>
+
+              <!-- CONTENT -->
+              <mat-card-content class="product-content" (click)="selectProduct(product.id)">
+                <div class="product-category">
+                  {{ (productCategoryService.getProductCategory(product.categoryId) | async)?.name }}
+                </div>
+                <h3 class="product-name">{{ product.name }}</h3>
+                <p class="product-description">{{ product.shortDescription.substr(0, 70) }}...</p>
+
+                <div class="product-rating">
+                  <div class="stars">
+                    <mat-icon *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= 4">star</mat-icon>
+                  </div>
+                  <span class="rating-text">4.5</span>
+                </div>
+              </mat-card-content>
+
+              <!-- ACTIONS -->
+              <mat-card-actions class="product-actions">
+                <div class="price-section">
+                  <span *ngIf="product.quantity >= 1" class="price">
+                    {{ product.price | currency:'TND':'code' }}
+                  </span>
+                  <span *ngIf="product.quantity < 1" class="out-of-stock-text">Temporairement épuisé</span>
+                </div>
+
+                <button mat-icon-button class="add-to-cart-btn" [disabled]="product.quantity < 1"
+                  (click)="addProductToCart(product.id)" matTooltip="Ajouter au panier">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </ng-container>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div *ngIf="!(loadingStatus$ | async) && length === 0" class="empty-results animate-up">
+          <mat-icon>search_off</mat-icon>
+          <h2>Aucun produit trouvé</h2>
+          <p>Essayez de modifier vos filtres ou effectuez une nouvelle recherche.</p>
+          <button mat-stroked-button color="primary" (click)="handleQueryEvent(''); selectedCategory$.next(null)">
+            Réinitialiser les filtres
+          </button>
+        </div>
+
+        <!-- PAGINATOR -->
+        <div class="pagination-container" *ngIf="!(loadingStatus$ | async) && length > 0">
+          <mat-paginator (page)="handlePageEvent($event)" showFirstLastButtons="true" [length]="length"
+            [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" [pageIndex]="pageIndex">
+          </mat-paginator>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>

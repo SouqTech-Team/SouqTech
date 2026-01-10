@@ -1,0 +1,70 @@
+<form [formGroup]="form" (ngSubmit)="onFormSubmit()" class="auth-form">
+    <div class="form-fields">
+        <div class="name-row">
+            <!-- NAME -->
+            <mat-form-field appearance="outline" class="premium-field">
+                <mat-label>Prénom</mat-label>
+                <mat-icon matPrefix>person</mat-icon>
+                <input matInput type="text" formControlName="name" placeholder="John"
+                    [errorStateMatcher]="basicErrorStateMatcher" />
+                <mat-error *ngIf="this.name.hasError('required')">Prénom obligatoire</mat-error>
+            </mat-form-field>
+
+            <!-- SURNAME -->
+            <mat-form-field appearance="outline" class="premium-field">
+                <mat-label>Nom</mat-label>
+                <mat-icon matPrefix>person</mat-icon>
+                <input matInput type="text" formControlName="surname" placeholder="Doe"
+                    [errorStateMatcher]="basicErrorStateMatcher" />
+                <mat-error *ngIf="this.surname.hasError('required')">Nom obligatoire</mat-error>
+            </mat-form-field>
+        </div>
+
+        <!-- EMAIL -->
+        <mat-form-field appearance="outline" class="premium-field">
+            <mat-label>Email</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput type="email" formControlName="email" placeholder="votre@email.com"
+                [errorStateMatcher]="basicErrorStateMatcher" />
+            <mat-error *ngIf="this.email.hasError('email') && !this.email.hasError('required')">Email
+                invalide</mat-error>
+            <mat-error *ngIf="this.email.hasError('required')">Email obligatoire</mat-error>
+        </mat-form-field>
+
+        <!-- PASSWORD -->
+        <mat-form-field appearance="outline" class="premium-field">
+            <mat-label>Mot de passe</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input matInput [type]="isPasswordVisible ? 'text' : 'password'" formControlName="password" />
+            <button type="button" mat-icon-button matSuffix (click)="togglePasswordVisibility()" tabindex="-1">
+                <mat-icon>{{ isPasswordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="this.password.hasError('required')">Mot de passe obligatoire</mat-error>
+        </mat-form-field>
+
+        <!-- PASSWORD REPEAT -->
+        <mat-form-field appearance="outline" class="premium-field">
+            <mat-label>Confirmer le mot de passe</mat-label>
+            <mat-icon matPrefix>lock_reset</mat-icon>
+            <input matInput [type]="isPasswordRepeatVisible ? 'text' : 'password'" formControlName="passwordRepeat"
+                [errorStateMatcher]="equalFieldsErrorStateMatcher" />
+            <button type="button" mat-icon-button matSuffix (click)="togglePasswordRepeatVisibility()" tabindex="-1">
+                <mat-icon>{{ isPasswordRepeatVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="this.passwordRepeat.hasError('required') && !form.hasError('equalFields')">Confirmation
+                obligatoire</mat-error>
+            <mat-error *ngIf="form.hasError('equalFields')">Les mots de passe ne correspondent pas</mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="form-options">
+        <mat-checkbox color="primary" class="terms-check">
+            J'accepte les <a class="link">Conditions d'utilisation</a>
+        </mat-checkbox>
+    </div>
+
+    <!-- BUTTON -->
+    <button mat-raised-button [disabled]="!form.valid || disabled" class="btn-gradient submit-btn">
+        {{ disabled ? 'Création en cours...' : "Créer mon compte" }}
+    </button>
+</form>

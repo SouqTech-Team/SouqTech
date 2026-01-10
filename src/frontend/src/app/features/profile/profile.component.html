@@ -1,0 +1,128 @@
+<div class="profile-wrapper animate-fade-in">
+    <div class="container container-narrow">
+
+        <!-- DASHBOARD HEADER -->
+        <div class="profile-header card-shine" *ngIf="currentUser$ | async as user">
+            <div class="profile-main">
+                <div class="avatar-wrapper">
+                    <div class="avatar-circle">
+                        {{ user.name.charAt(0).toUpperCase() }}
+                    </div>
+                    <button mat-icon-button class="edit-avatar"><mat-icon>camera_alt</mat-icon></button>
+                </div>
+                <div class="user-info">
+                    <span class="welcome">Bonjour,</span>
+                    <h1>{{ user.name }} {{ user.surname }}</h1>
+                    <p>{{ user.email }}</p>
+                </div>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item" *ngIf="orders$ | async as orders">
+                    <span class="value">{{ orders.length }}</span>
+                    <span class="label">Commandes</span>
+                </div>
+                <div class="divider"></div>
+                <div class="stat-item">
+                    <span class="value">0</span>
+                    <span class="label">Points Fidelité</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS/SECTIONS -->
+        <div class="sections-grid">
+            <!-- MAIN CONTENT: ORDERS -->
+            <div class="orders-column">
+                <div class="section-title-row">
+                    <h2><mat-icon>shopping_bag</mat-icon> Historique des commandes</h2>
+                </div>
+
+                <div class="orders-list" *ngIf="orders$ | async as orders; else loading">
+                    <div *ngIf="orders.length === 0" class="empty-orders animate-up">
+                        <mat-icon>inventory_2</mat-icon>
+                        <p>Vous n'avez pas encore passé de commande.</p>
+                        <button mat-raised-button class="btn-gradient" routerLink="/products">Parcourir la
+                            boutique</button>
+                    </div>
+
+                    <div *ngFor="let order of orders" class="order-card hover-lift animate-up">
+                        <div class="order-top">
+                            <div class="order-id">
+                                <span class="ref">Commande #{{ order.id }}</span>
+                                <span class="date">{{ order.createdAt | date:'medium' }}</span>
+                            </div>
+                            <span class="status-badge" [class]="order.status.toLowerCase()">
+                                {{ order.status }}
+                            </span>
+                        </div>
+
+                        <mat-divider></mat-divider>
+
+                        <div class="order-details">
+                            <div class="items-preview" *ngIf="order.products">
+                                <div class="item-count">{{ order.products.length }} article{{ order.products.length > 1
+                                    ? 's' : '' }}</div>
+                                <div class="product-names">
+                                    <span *ngFor="let p of order.products; let last = last">{{ p.name }}{{ last ? '' :
+                                        ', ' }}</span>
+                                </div>
+                            </div>
+                            <div class="total-section">
+                                <span>Total</span>
+                                <span class="amount">{{ order.totalAmount | currency:'TND':'code' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="order-actions">
+                            <button mat-button class="action-btn"><mat-icon>description</mat-icon> Détails</button>
+                            <button mat-button class="action-btn"><mat-icon>share</mat-icon> Suivi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIDEBAR: ACCOUNT INFO -->
+            <div class="sidebar-column">
+                <div class="settings-card card-shine">
+                    <h3>Paramètres du compte</h3>
+                    <mat-nav-list class="settings-list">
+                        <a mat-list-item routerLink="/profile">
+                            <mat-icon matListItemIcon>person_outline</mat-icon>
+                            <div matListItemTitle>Informations personnelles</div>
+                        </a>
+                        <a mat-list-item routerLink="/wishlist">
+                            <mat-icon matListItemIcon>favorite_border</mat-icon>
+                            <div matListItemTitle>Ma Liste de souhaits</div>
+                        </a>
+                        <a mat-list-item>
+                            <mat-icon matListItemIcon>location_on</mat-icon>
+                            <div matListItemTitle>Mes Adresses</div>
+                        </a>
+                        <a mat-list-item>
+                            <mat-icon matListItemIcon>credit_card</mat-icon>
+                            <div matListItemTitle>Modes de paiement</div>
+                        </a>
+                        <mat-divider></mat-divider>
+                        <button mat-list-item class="logout-btn">
+                            <mat-icon matListItemIcon color="warn">logout</mat-icon>
+                            <div matListItemTitle color="warn">Déconnexion</div>
+                        </button>
+                    </mat-nav-list>
+                </div>
+
+                <div class="help-ad card-shine">
+                    <mat-icon>help_outline</mat-icon>
+                    <h4>Besoin d'aide ?</h4>
+                    <p>Notre service client est à votre disposition 7j/7 pour vous aider.</p>
+                    <button mat-stroked-button color="primary">Contacter le SAV</button>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #loading>
+            <div class="loading-state">
+                <mat-spinner diameter="40"></mat-spinner>
+            </div>
+        </ng-template>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="item">
+    <!-- REMOVE ITEM -->
+    <div class="item-cancel">
+        <a (click)="this.removeItemEvent.emit()">
+            <mat-icon style="font-size: larger;">cancel</mat-icon>
+        </a>
+    </div>
+    <!-- ITEM -->
+    <div class="item-info">
+        <div class="item-main-info" (click)="this.selectItemEvent.emit()">
+            <h3>{{item.product.name}}</h3>
+        </div>
+        <div class="item-sub-info">
+            <i>{{ item.quantity }} x {{ item.product.price | currency:'EUR' }}</i>
+            <span class="item-total-price">{{ (item.quantity * item.product.price) | currency:'EUR' }}</span>
+        </div>
+    </div>
+</div>

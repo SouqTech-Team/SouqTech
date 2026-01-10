@@ -1,0 +1,39 @@
+.item-sub-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.item-main-info h3 {
+    margin: 0;
+    cursor: pointer;
+}
+
+.item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.item-cancel {
+    color: gray;
+    flex: 0 0 auto;
+    padding-right: 10px;
+}
+
+.item-cancel:hover {
+    color: red;
+}
+
+.item-info {
+    flex: 1;
+}
+
+a {
+    cursor: pointer;
+}
+
+.item-total-price {
+    font-weight: 500;
+}

@@ -1,0 +1,14 @@
+<!-- TITLE -->
+<h1 mat-dialog-title class="dialog-title">
+  <mat-icon class="dialog-title-icon" color="warn">{{ materialIcon }}</mat-icon>
+  {{ title }}
+</h1>
+<!-- CONTENT -->
+<div mat-dialog-content>
+  {{ content }}
+</div>
+<!-- ACTIONS -->
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="false">{{ negativeButton }}</button>
+  <button mat-raised-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>{{ positiveButton }}</button>
+</div>

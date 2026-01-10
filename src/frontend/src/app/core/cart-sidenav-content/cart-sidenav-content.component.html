@@ -1,0 +1,30 @@
+<div class="container">
+    <h1 class="title">Cart</h1>
+
+    <div *ngIf="cart.quantity > 0; then itemsBlock else noItemsBlock"></div>
+
+    <ng-template #noItemsBlock>
+        <p>The cart is empty.</p>       
+    </ng-template>
+
+    <ng-template #itemsBlock>
+        <!-- ITEM LIST -->
+        <app-cart-items-list 
+            [items]="cart.items"
+            (removeItemEvent)="removeItemById($event)"
+            (selectItemEvent)="selectProductById($event)"
+            ></app-cart-items-list>
+        <!-- CART TOTAL -->
+        <h2 class="cart-subtotal">
+            <span>Subtotal</span>
+            <span>{{ cart.total | currency:'EUR' }}</span>
+        </h2>
+        <!-- CART QUANTITY -->
+        <p class="cart-quantity"><i>{{ cart.quantity }} items</i></p>
+        <!-- ACTION BUTTONS -->
+        <div class="cart-button">
+            <button mat-raised-button [routerLink]="['cart']" (click)="this.cartService.closeCart()">View Cart</button>
+            <button mat-raised-button color="primary">Checkout</button>
+        </div>
+    </ng-template>
+</div>

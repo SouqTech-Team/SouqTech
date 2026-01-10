@@ -1,0 +1,41 @@
+<form [formGroup]="form" (ngSubmit)="onFormSubmit()" class="auth-form">
+  <div class="form-fields">
+    <!-- EMAIL -->
+    <mat-form-field appearance="outline" class="premium-field">
+      <mat-label>Email</mat-label>
+      <mat-icon matPrefix>email</mat-icon>
+      <input matInput type="email" formControlName="email" [errorStateMatcher]="matcher"
+        placeholder="votre@email.com" />
+      <mat-error *ngIf="this.email.hasError('email') && !this.email.hasError('required')">
+        L'adresse email n'est pas valide
+      </mat-error>
+      <mat-error *ngIf="this.email.hasError('required')">
+        L'email est <strong>obligatoire</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <!-- PASSWORD -->
+    <mat-form-field appearance="outline" class="premium-field">
+      <mat-label>Mot de passe</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input matInput [type]="isPasswordVisible ? 'text' : 'password'" formControlName="password"
+        [errorStateMatcher]="matcher" />
+      <button type="button" mat-icon-button matSuffix (click)="toggleVisibility()" tabindex="-1">
+        <mat-icon>{{ isPasswordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="this.password.hasError('required')">
+        Le mot de passe est <strong>obligatoire</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-options">
+    <mat-checkbox color="primary">Se souvenir de moi</mat-checkbox>
+    <a class="forgot-link">Mot de passe oublié ?</a>
+  </div>
+
+  <!-- BUTTON -->
+  <button mat-raised-button [disabled]="!form.valid || disabled" class="btn-gradient submit-btn">
+    {{ disabled ? 'Connexion en cours...' : 'Se connecter' }}
+  </button>
+</form>

@@ -1,0 +1,38 @@
+application:
+  title: "SouqTech"
+  version: "1.0.0"
+  description: "Plateforme e-commerce moderne SouqTech - Projet Fédérateur"
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+  messages:
+    basename: validation-messages
+
+web:
+  cors:
+    allowed-origins: "http://localhost:4200"
+    allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
+    max-age: 3600
+    allowed-headers: "*"
+    exposed-headers: "X-Get-Header"
+
+jwt:
+  secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+  expiration: 86400000 # 24 hours in milliseconds

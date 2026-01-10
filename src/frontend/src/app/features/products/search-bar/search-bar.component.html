@@ -1,0 +1,10 @@
+<form [formGroup]="searchForm" role="search">
+  <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input #search formControlName="search" matInput type="text">
+      <button *ngIf="search.value" matSuffix mat-icon-button (click)="onClear()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+</form>

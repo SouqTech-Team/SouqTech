@@ -1,0 +1,59 @@
+<div class="auth-wrapper animate-fade-in">
+    <div class="mesh-background"></div>
+
+    <mat-card class="auth-card">
+        <div class="auth-header">
+            <div class="brand-logo" routerLink="/home">
+                <mat-icon class="logo-icon">local_mall</mat-icon>
+                <span class="brand-name">SouqTech</span>
+            </div>
+            <h2 class="auth-title">{{ (mode$ | async) === 'signin' ? 'Bon retour !' : 'Rejoignez-nous' }}</h2>
+            <p class="auth-subtitle">
+                {{ (mode$ | async) === 'signin' ? 'Connectez-vous pour accéder à vos offres high-tech.' : 'Créez votre
+                compte pour une expérience personnalisée.' }}
+            </p>
+        </div>
+
+        <!-- TABS -->
+        <nav mat-tab-nav-bar mat-stretch-tabs="false" mat-align-tabs="center" [tabPanel]="tabPanel"
+            class="premium-tabs">
+            <a mat-tab-link (click)="mode$.next('signin')" [active]="(mode$ | async) === 'signin'">Connexion</a>
+            <a mat-tab-link (click)="mode$.next('signup')" [active]="(mode$ | async) === 'signup'">Inscription</a>
+        </nav>
+
+        <!-- PANEL -->
+        <mat-tab-nav-panel #tabPanel>
+            <div class="form-container">
+                <app-sign-in *ngIf="(mode$ | async) === 'signin'" (formSubmitted)="signIn$.next($event)"
+                    [disabled]="(status$ | async) === 'pending'"></app-sign-in>
+                <app-sign-up *ngIf="(mode$ | async) === 'signup'" (formSubmitted)="signUp$.next($event)"
+                    [disabled]="(status$ | async) === 'pending'"></app-sign-up>
+            </div>
+        </mat-tab-nav-panel>
+
+        <!-- STATUS BAR INTERFACE -->
+        <div class="status-footer" *ngIf="(status$ | async) !== 'initial'">
+            <app-status [status]="(status$ | async) || 'initial'"></app-status>
+        </div>
+
+        <div class="social-login" *ngIf="(mode$ | async) === 'signin'">
+            <div class="divider"><span>ou continuer avec</span></div>
+            <div class="social-buttons">
+                <button mat-stroked-button class="social-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
+                    Google
+                </button>
+                <button mat-stroked-button class="social-btn">
+                    <mat-icon>apple</mat-icon>
+                    Apple
+                </button>
+            </div>
+        </div>
+    </mat-card>
+
+    <div class="auth-links highlight-animate">
+        <a routerLink="/products">Retour à la boutique</a>
+        <span class="dot"></span>
+        <a routerLink="/about">Besoin d'aide ?</a>
+    </div>
+</div>

@@ -1,0 +1,150 @@
+<div class="hero-wrapper">
+  <div class="hero-mesh-background"></div>
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text animate-fade-in-left">
+        <div class="tunisia-badge">
+          <mat-icon>verified</mat-icon>
+          <span>N°1 en High-Tech en Tunisie</span>
+        </div>
+        <h1 class="hero-title">
+          <span class="text-gradient">L'Innovation</span><br>
+          <span class="text-dark">à portée de main.</span>
+        </h1>
+        <p class="hero-subtitle">Bienvenue chez <strong>SouqTech</strong>. Découvrez les derniers smartphones, PC et
+          objets connectés avec une garantie officielle et un service après-vente d'exception.</p>
+        <div class="hero-actions">
+          <button mat-raised-button class="btn-gradient hero-btn" routerLink="/products">
+            <mat-icon>shopping_bag</mat-icon>
+            Boutique
+          </button>
+          <button mat-stroked-button class="hero-btn-secondary" routerLink="/about">
+            En Savoir Plus
+          </button>
+        </div>
+      </div>
+      <div class="hero-image-container animate-fade-in-right">
+        <div class="hero-main-image">
+          <!-- Image générée avec Zellige et high-tech -->
+          <img src="assets/hero_tech_tunisia.png" alt="SouqTech Hero" class="main-img">
+          <div class="glass-float-card card-1">
+            <mat-icon>local_shipping</mat-icon>
+            <div>
+              <strong>Livraison Express</strong>
+              <span>Toute la Tunisie</span>
+            </div>
+          </div>
+          <div class="glass-float-card card-2">
+            <mat-icon>security</mat-icon>
+            <div>
+              <strong>Garantie Officielle</strong>
+              <span>100% Certifié</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="features-section">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card animate-up" style="--delay: 0.1s">
+        <div class="icon-circle"><mat-icon>flash_on</mat-icon></div>
+        <h3>Rapide</h3>
+        <p>Livraison 24/48h</p>
+      </div>
+      <div class="feature-card animate-up" style="--delay: 0.2s">
+        <div class="icon-circle"><mat-icon>payments</mat-icon></div>
+        <h3>Flexibilité</h3>
+        <p>Paiement à la livraison</p>
+      </div>
+      <div class="feature-card animate-up" style="--delay: 0.3s">
+        <div class="icon-circle"><mat-icon>verified_user</mat-icon></div>
+        <h3>Confiance</h3>
+        <p>SAV & Garantie 1 an</p>
+      </div>
+      <div class="feature-card animate-up" style="--delay: 0.4s">
+        <div class="icon-circle"><mat-icon>stars</mat-icon></div>
+        <h3>Qualité</h3>
+        <p>Produits Originaux</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="featured-products-section" *ngIf="featuredProducts$ | async as products">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Tendances du Moment</h2>
+      <button mat-button color="primary" routerLink="/products">Voir tout <mat-icon>arrow_forward</mat-icon></button>
+    </div>
+    <div class="products-grid">
+      <mat-card *ngFor="let product of products" class="product-card hover-lift"
+        [routerLink]="['/products', product.id]">
+        <div class="product-img-wrapper">
+          <img [src]="product.image" [alt]="product.name">
+        </div>
+        <mat-card-content>
+          <span class="category-tag">Tech Selection</span>
+          <h3 class="product-name">{{ product.name }}</h3>
+          <div class="product-footer">
+            <span class="price">{{ product.price | currency:'TND':'code' }}</span>
+            <button mat-icon-button class="add-btn"><mat-icon>add_shopping_cart</mat-icon></button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="categories-section">
+  <div class="container">
+    <h2 class="section-title">Explorez par Univers</h2>
+    <div class="categories-grid">
+      <div class="category-item laptop" routerLink="/products">
+        <div class="category-overlay"></div>
+        <div class="category-content">
+          <mat-icon>laptop</mat-icon>
+          <span>Ordinateurs</span>
+        </div>
+      </div>
+      <div class="category-item phone" routerLink="/products">
+        <div class="category-overlay"></div>
+        <div class="category-content">
+          <mat-icon>smartphone</mat-icon>
+          <span>Smartphones</span>
+        </div>
+      </div>
+      <div class="category-item audio" routerLink="/products">
+        <div class="category-overlay"></div>
+        <div class="category-content">
+          <mat-icon>headphones</mat-icon>
+          <span>Audio & Son</span>
+        </div>
+      </div>
+      <div class="category-item watch" routerLink="/products">
+        <div class="category-overlay"></div>
+        <div class="category-content">
+          <mat-icon>watch</mat-icon>
+          <span>Accessoires</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-banner">
+  <div class="cta-mesh"></div>
+  <div class="container">
+    <div class="cta-inner">
+      <h2>Prêt pour la prochaine étape ?</h2>
+      <p>Créez votre compte aujourd'hui et profitez de réductions exclusives.</p>
+      <div class="cta-buttons">
+        <button mat-raised-button class="btn-light" routerLink="/authenticate">S'inscrire</button>
+        <button mat-stroked-button class="btn-outline-light" routerLink="/products">Explorer</button>
+      </div>
+    </div>
+  </div>
+</div>

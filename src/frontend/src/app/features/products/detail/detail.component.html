@@ -1,0 +1,159 @@
+<div *ngIf="product$ | async as product" class="detail-wrapper animate-fade-in">
+    <div class="container">
+        <!-- BREADCRUMB -->
+        <nav class="breadcrumb-nav">
+            <a routerLink="/home">Accueil</a>
+            <mat-icon>chevron_right</mat-icon>
+            <a routerLink="/products">Produits</a>
+            <mat-icon>chevron_right</mat-icon>
+            <span class="current">{{ product.name }}</span>
+        </nav>
+
+        <!-- PRODUCT DETAIL GRID -->
+        <div class="product-detail-grid">
+            <!-- LEFT: IMAGE GALERY -->
+            <div class="product-gallery animate-fade-in-left">
+                <div class="main-image-wrapper card-shine">
+                    <img [src]="product.image" [alt]="product.name">
+                </div>
+                <div class="badge-stock" [class.out]="product.quantity < 1">
+                    <mat-icon>{{ product.quantity >= 1 ? 'check_circle' : 'error' }}</mat-icon>
+                    <span>{{ product.quantity >= 1 ? 'En Stock' : 'Rupture de Stock' }}</span>
+                </div>
+            </div>
+
+            <!-- RIGHT: PRODUCT INFO -->
+            <div class="product-info animate-fade-in-right">
+                <div class="category-tag">{{ (productCategoryService.getProductCategory(product.categoryId) |
+                    async)?.name }}</div>
+                <h1 class="product-title">{{ product.name }}</h1>
+
+                <div class="rating-summary" *ngIf="averageRating$ | async as avg">
+                    <div class="stars">
+                        <mat-icon *ngFor="let i of [1,2,3,4,5]" [class.filled]="i <= avg">star</mat-icon>
+                    </div>
+                    <span class="count">({{ avg | number:'1.1-1' }}/5)</span>
+                </div>
+
+                <p class="product-short-desc">{{ product.shortDescription }}</p>
+
+                <div class="price-section">
+                    <div class="price-tag">{{ product.price | currency:'TND':'code' }}</div>
+                    <div class="payment-offer">Paiement à la livraison disponible en Tunisie</div>
+                </div>
+
+                <div class="product-main-desc">
+                    <h3>Description</h3>
+                    <p>{{ product.description }}</p>
+                </div>
+
+                <div class="product-actions" *ngIf="product.quantity >= 1">
+                    <div class="qty-selector">
+                        <!-- Simple quantity selector concept could go here if implemented -->
+                    </div>
+                    <button mat-raised-button class="btn-gradient add-to-cart-btn"
+                        (click)="addProductToCart(product.id)">
+                        <mat-icon>add_shopping_cart</mat-icon>
+                        Ajouter au panier
+                    </button>
+
+                    <button mat-icon-button class="wishlist-btn" (click)="addToWishlist(product.id)"
+                        matTooltip="Ajouter aux favoris">
+                        <mat-icon>favorite_border</mat-icon>
+                    </button>
+                </div>
+
+                <div class="product-features-small">
+                    <div class="feature-item">
+                        <mat-icon>local_shipping</mat-icon>
+                        <span>Livraison 48h</span>
+                    </div>
+                    <div class="feature-item">
+                        <mat-icon>verified</mat-icon>
+                        <span>Garantie Officielle</span>
+                    </div>
+                    <div class="feature-item">
+                        <mat-icon>history</mat-icon>
+                        <span>Retour sous 7 jours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REVIEWS SECTION -->
+        <div class="reviews-wrapper">
+            <div class="section-divider"></div>
+
+            <div class="reviews-container">
+                <div class="reviews-sidebar">
+                    <h2 class="section-title-small">Avis Clients</h2>
+                    <div class="rating-big" *ngIf="averageRating$ | async as avg">
+                        <span class="score">{{ avg | number:'1.1-1' }}</span>
+                        <div class="stars">
+                            <mat-icon *ngFor="let i of [1,2,3,4,5]" [class.filled]="i <= avg">star</mat-icon>
+                        </div>
+                        <span class="total-reviews">Basé sur les avis récents</span>
+                    </div>
+
+                    <!-- ADD REVIEW FORM -->
+                    <div class="add-review-box card-shine" *ngIf="authService.currentUser$ | async; else loginToReview">
+                        <h3>Laisser un avis</h3>
+                        <div class="rating-input">
+                            <button mat-icon-button *ngFor="let i of [1,2,3,4,5]" (click)="newRating = i">
+                                <mat-icon [class.filled]="i <= newRating">star</mat-icon>
+                            </button>
+                        </div>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <textarea matInput [(ngModel)]="newComment" rows="3"
+                                placeholder="Votre expérience avec ce produit..."></textarea>
+                        </mat-form-field>
+                        <button mat-raised-button class="btn-gradient full-width" (click)="submitReview()"
+                            [disabled]="!newComment.trim() || newRating === 0">
+                            Publier l'avis
+                        </button>
+                    </div>
+
+                    <ng-template #loginToReview>
+                        <div class="login-prompt">
+                            <mat-icon>lock</mat-icon>
+                            <p>Connectez-vous pour partager votre avis.</p>
+                            <button mat-button color="primary" routerLink="/authenticate">Se connecter</button>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <div class="reviews-list-side">
+                    <div class="reviews-list" *ngIf="reviews$ | async as reviewsData">
+                        <div class="review-item animate-up" *ngFor="let review of reviewsData.content; let i = index"
+                            [style.--delay]="i * 0.1 + 's'">
+                            <div class="review-header">
+                                <div class="user-avatar">{{ review.userName.charAt(0) }}</div>
+                                <div class="user-meta">
+                                    <span class="name">{{ review.userName }}</span>
+                                    <span class="date">{{ review.createdAt | date:'longDate' }}</span>
+                                </div>
+                                <div class="stars small">
+                                    <mat-icon *ngFor="let i of [1,2,3,4,5]"
+                                        [class.filled]="i <= review.rating">star</mat-icon>
+                                </div>
+                            </div>
+                            <p class="comment">{{ review.comment }}</p>
+                            <div class="review-footer">
+                                <button mat-button class="helpful-btn" (click)="markHelpful(review.id)">
+                                    <mat-icon>thumb_up_off_alt</mat-icon>
+                                    <span>Utile ({{ review.helpfulCount }})</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div *ngIf="reviewsData.content.length === 0" class="empty-reviews">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7265556.png"
+                                alt="No reviews">
+                            <p>Soyez le premier à donner votre avis sur ce produit !</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

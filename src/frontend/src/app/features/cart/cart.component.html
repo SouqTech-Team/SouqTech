@@ -1,0 +1,100 @@
+<div class="cart-wrapper animate-fade-in">
+    <div class="container">
+        <div class="cart-header">
+            <h1 class="page-title">Votre Panier</h1>
+            <p class="cart-count">{{ cart.quantity }} article{{ cart.quantity > 1 ? 's' : '' }}</p>
+        </div>
+
+        <div *ngIf="cart.quantity > 0; else emptyCart" class="cart-grid">
+            <!-- ITEMS LIST -->
+            <div class="cart-items-list animate-fade-in-left">
+                <div *ngFor="let element of cart.items" class="cart-item-card hover-lift">
+                    <div class="item-img" (click)="selectProduct(element)">
+                        <img [src]="element.product.image" [alt]="element.product.name">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-category">{{
+                            (productCategoryService.getProductCategory(element.product.categoryId) | async)?.name }}
+                        </div>
+                        <h3 class="item-name" (click)="selectProduct(element)">{{ element.product.name }}</h3>
+                        <div class="item-price-unit">{{ element.product.price | currency:'TND':'code' }} l'unité</div>
+                    </div>
+                    <div class="item-controls">
+                        <div class="qty-control">
+                            <button mat-icon-button (click)="decreaseItemQuantity(element)"
+                                [disabled]="element.quantity <= 1">
+                                <mat-icon>remove</mat-icon>
+                            </button>
+                            <span class="qty-value">{{ element.quantity }}</span>
+                            <button mat-icon-button (click)="increaseItemQuantity(element)"
+                                [disabled]="element.quantity >= element.product.quantity">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                        <div class="item-subtotal">
+                            {{ (element.quantity * element.product.price) | currency:'TND':'code' }}
+                        </div>
+                    </div>
+                    <button mat-icon-button class="remove-btn" (click)="removeItem(element)" matTooltip="Supprimer">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUMMARY SIDEBAR -->
+            <div class="cart-summary animate-fade-in-right">
+                <div class="summary-card card-shine">
+                    <h3>Récapitulatif</h3>
+                    <div class="summary-row">
+                        <span>Sous-total</span>
+                        <span>{{ cart.total | currency:'TND':'code' }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Livraison</span>
+                        <span class="free">Gratuite</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>TVA (Généré)</span>
+                        <span>{{ (cart.total * 0.19) | currency:'TND':'code' }}</span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span class="total-price">{{ cart.total | currency:'TND':'code' }}</span>
+                    </div>
+                    <p class="tax-info">*TVA incluse dans le prix total</p>
+
+                    <button mat-raised-button class="btn-gradient checkout-btn" (click)="checkout()">
+                        <mat-icon>shopping_cart_checkout</mat-icon>
+                        Passer à la commande
+                    </button>
+
+                    <div class="security-badges">
+                        <div class="badge">
+                            <mat-icon>security</mat-icon>
+                            <span>Paiement 100% sécurisé</span>
+                        </div>
+                        <div class="badge">
+                            <mat-icon>local_shipping</mat-icon>
+                            <span>Livraison express partout en Tunisie</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <ng-template #emptyCart>
+            <div class="empty-cart-state animate-up">
+                <div class="empty-icon-wrapper">
+                    <mat-icon>shopping_bag</mat-icon>
+                </div>
+                <h2>Votre panier est vide</h2>
+                <p>Il semble que vous n'ayez pas encore ajouté d'articles. Découvrez nos dernières nouveautés tech !</p>
+                <button mat-raised-button class="btn-gradient" routerLink="/products">
+                    Voir les produits
+                </button>
+            </div>
+        </ng-template>
+    </div>
+</div>

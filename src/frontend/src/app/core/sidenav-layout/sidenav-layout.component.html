@@ -1,0 +1,8 @@
+<mat-sidenav-container class="example-container">
+    <mat-sidenav #sidenav mode="push" position="end" [opened]="isOpen">
+        <app-cart-sidenav-content></app-cart-sidenav-content>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>

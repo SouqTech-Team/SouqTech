@@ -1,0 +1,24 @@
+.container {
+    padding: 20px;
+}
+
+.title {
+    margin: 0;
+}
+
+.cart-subtotal {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    margin-top: 30px;
+}
+
+.cart-quantity {
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.cart-button {
+    display: flex;
+    justify-content: space-between;
+}

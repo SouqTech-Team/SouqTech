@@ -1,0 +1,239 @@
+// Custom Theming for Angular Material
+@use '@angular/material' as mat;
+
+// ============================================
+// 1. TYPOGRAPHY & VARIABLES
+// ============================================
+$custom-typography: mat.define-typography-config($font-family: '"Outfit", "Inter", "Helvetica Neue", sans-serif',
+    $headline-1: mat.define-typography-level(96px, 96px, 900, $letter-spacing: -1.5px),
+    $headline-2: mat.define-typography-level(60px, 60px, 800, $letter-spacing: -0.5px),
+    $headline-3: mat.define-typography-level(48px, 48px, 700, $letter-spacing: 0px),
+    $headline-4: mat.define-typography-level(34px, 34px, 700, $letter-spacing: 0.25px),
+    $headline-5: mat.define-typography-level(24px, 24px, 600, $letter-spacing: 0px),
+    $headline-6: mat.define-typography-level(20px, 20px, 600, $letter-spacing: 0.15px),
+    $subtitle-1: mat.define-typography-level(16px, 24px, 500, $letter-spacing: 0.15px),
+    $body-1: mat.define-typography-level(16px, 24px, 400, $letter-spacing: 0.5px),
+    $button: mat.define-typography-level(14px, 14px, 600, $letter-spacing: 1.25px));
+
+@include mat.core();
+
+// ============================================
+// 2. PALETTE (SOUQTECH THEME)
+// ============================================
+$techshop-primary: mat.define-palette(mat.$indigo-palette, 600, 400, 800);
+$techshop-accent: mat.define-palette(mat.$deep-purple-palette, A200, A100, A400);
+
+$techshop-theme: mat.define-light-theme((color: (primary: $techshop-primary,
+        accent: $techshop-accent,
+        warn: mat.define-palette(mat.$red-palette),
+      ),
+      typography: $custom-typography,
+      density: 0));
+
+@include mat.all-component-themes($techshop-theme);
+
+// ============================================
+// 3. GLOBAL STYLES & RESETS
+// ============================================
+:root {
+  --primary-color: #673ab7;
+  --primary-hover: #5e35b1;
+  --accent-color: #03a9f4;
+  --bg-color: #ffffff;
+  --surface-color: #FFFFFF;
+  --text-main: #1a1a1a;
+  --text-muted: #666666;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+  --radius-md: 12px;
+  --radius-lg: 24px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+// ============================================
+// 4. UTILITY CLASSES (MODERN UI)
+// ============================================
+
+// GLASSMORPHISM HEADER
+.glass-header {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+// MODERN CARD
+.tech-card {
+  background: var(--surface-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  mat-card-header {
+    padding: 16px;
+  }
+
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// GRADIENT BUTTONS
+.btn-gradient {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;
+  color: white !important;
+  border: none;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+  transition: all 0.2s ease;
+
+  &:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 6px 12px rgba(79, 70, 229, 0.4);
+    transform: translateY(-1px);
+  }
+}
+
+// TYPOGRAPHY UTILS
+.text-gradient {
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--text-main);
+  text-align: center;
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--primary-color);
+    margin: 0.5rem auto 0;
+    border-radius: 2px;
+  }
+}
+
+// ANIMATIONS & TRANSITIONS
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.slide-up {
+  animation: slideUp 0.6s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// HOVER EFFECTS
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+// LOADING STATES
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

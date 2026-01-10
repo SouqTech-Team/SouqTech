@@ -1,0 +1,75 @@
+@import "../../../../styles.scss";
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.premium-field {
+    width: 100%;
+
+    ::ng-deep {
+        .mat-mdc-text-field-wrapper {
+            background-color: #fcfcfc !important;
+            border-radius: 12px !important;
+            transition: all 0.2s ease;
+        }
+
+        .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+        .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+        .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+            border-color: #eee !important;
+        }
+
+        .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+        .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+        .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+            border-color: #673ab7 !important;
+        }
+
+        mat-icon {
+            color: #aaa;
+            margin-right: 8px;
+        }
+    }
+}
+
+.form-options {
+    margin: -0.5rem 0;
+
+    .terms-check {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    .link {
+        color: #673ab7;
+        font-weight: 700;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.submit-btn {
+    width: 100%;
+    height: 56px !important;
+    border-radius: 16px !important;
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    box-shadow: 0 10px 20px rgba(103, 58, 183, 0.2) !important;
+}
