@@ -1,6 +1,6 @@
 import csv
 
-file_path = r'c:\Users\saife\.gemini\antigravity\scratch\lab_work\fullstack-ecommerce\src\backend\target\site\jacoco\jacoco.csv'
+file_path = r'target/site/jacoco/jacoco.csv'
 
 total_missed = 0
 total_covered = 0

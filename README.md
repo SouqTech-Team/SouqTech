@@ -76,6 +76,3 @@ Une fois lancé, accédez à Swagger UI pour tester en direct : `http://localhos
 - `GET /api/wishlist/shared/{token}` : Accéder à une wishlist publique (via lien de partage)
 
 ---
-*Personnalisé et Amélioré par Antigravity AI*
-
-<!-- Test Jenkins Build #2 - 2026-01-11 15:32 -->
