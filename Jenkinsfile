@@ -58,6 +58,12 @@ pipeline {
         always {
             // Sauvegarde des rapports de tests JUnit pour affichage dans Jenkins
             junit 'src/backend/target/surefire-reports/*.xml'
+            
+            // Enregistrement des rapports JaCoCo pour les graphiques de couverture dans Jenkins
+            jacoco execPattern: 'src/backend/target/*.exec', 
+                   classPattern: 'src/backend/target/classes', 
+                   sourcePattern: 'src/backend/src/main/java', 
+                   exclusionPattern: '**/dto/**,**/entity/**,**/error/**,**/config/**'
         }
         success {
             echo 'Build Backend réussi !'
