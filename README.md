@@ -70,9 +70,29 @@ Une fois lancé, accédez à Swagger UI pour tester en direct : `http://localhos
 - `POST /api/reviews` : Ajouter un avis sur un produit
 - `GET /api/reviews/product/{productId}` : Consulter les avis d'un produit
 
+
 ### ❤️ Liste de Souhaits (Wishlist)
 - `GET /api/wishlist` : Consulter ma wishlist
 - `PUT /api/wishlist/toggle/{productId}` : Ajouter ou retirer un produit
 - `GET /api/wishlist/shared/{token}` : Accéder à une wishlist publique (via lien de partage)
+
+---
+
+## 🚀 Infrastructure CI/CD
+
+Ce projet utilise une approche double CI/CD pour une fiabilité maximale :
+
+1. **GitHub Actions (Cloud CI)** :
+   - Déclenchée automatiquement à chaque push sur `main`.
+   - Exécute les builds Maven et les tests dans le cloud.
+   - Intégrée avec SonarCloud pour l'analyse de qualité.
+
+2. **Jenkins (Local CI)** :
+   - Fonctionne sur un environnement local via un tunnel `ngrok`.
+   - **Domaine Statique** : `https://overwary-lien-tremulously.ngrok-free.dev`
+   - Gère les tâches de build locales et fournit un tableau de bord détaillé.
+
+---
+*Projet SouqTech*
 
 ---
