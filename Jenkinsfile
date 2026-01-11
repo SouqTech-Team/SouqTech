@@ -42,7 +42,7 @@ pipeline {
             steps {
                 dir('src/backend') {
                     script {
-                         def sonarCommand = 'mvn sonar:sonar -Dsonar.organization=souqtech-team -Dsonar.projectKey=SouqTech-Team_SouqTech -Dsonar.host.url=https://sonarcloud.io'
+                         def sonarCommand = 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=souqtech-team -Dsonar.projectKey=SouqTech-Team_SouqTech -Dsonar.host.url=https://sonarcloud.io'
                          if (isUnix()) {
                             sh sonarCommand
                         } else {
