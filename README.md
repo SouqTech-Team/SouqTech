@@ -77,3 +77,5 @@ Une fois lancé, accédez à Swagger UI pour tester en direct : `http://localhos
 
 ---
 *Personnalisé et Amélioré par Antigravity AI*
+
+<!-- Test webhook Jenkins + GitHub Actions - 2026-01-11 -->
