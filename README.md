@@ -99,3 +99,5 @@ Ce projet utilise une approche double CI/CD pour une fiabilitÃ© maximale :
 ---
 
 * Vérification du pipeline CI/CD : JaCoCo activé (Test du 11 Janvier)
+
+* [Test Trigger] Validation de la couverture SonarCloud
