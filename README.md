@@ -51,12 +51,29 @@ Bienvenue sur **SouqTech**, une version professionnelle et robuste d'une platefo
 
 ## 📚 Documentation API
 
-Une fois lancé, accédez à Swagger UI : `http://localhost:8080/swagger-ui.html`
+Une fois lancé, accédez à Swagger UI pour tester en direct : `http://localhost:8080/swagger-ui.html`
 
-### Nouveaux Endpoints
-- `POST /api/reviews/product/{id}` : Ajouter un avis
-- `GET /api/wishlist` : Voir ma wishlist
-- `GET /api/wishlist/shared/{token}` : Voir une wishlist partagée
+### 🔐 Authentification
+- `POST /api/auth/register` : Création de compte client
+- `POST /api/auth/login` : Connexion et obtention du Token JWT
+
+### 📦 Produits & Catalogue
+- `GET /api/products` : Liste des produits (paginée, recherche par nom/catégorie)
+- `GET /api/products/{id}` : Détails complets d'un produit
+- `GET /api/product-category` : Liste des catégories disponibles
+
+### 🛒 Commandes & Panier
+- `POST /api/checkout/purchase` : Valider et payer une commande
+- `GET /api/orders` : Historique des commandes de l'utilisateur connecté
+
+### ⭐ Avis & Notes (Reviews)
+- `POST /api/reviews` : Ajouter un avis sur un produit
+- `GET /api/reviews/product/{productId}` : Consulter les avis d'un produit
+
+### ❤️ Liste de Souhaits (Wishlist)
+- `GET /api/wishlist` : Consulter ma wishlist
+- `PUT /api/wishlist/toggle/{productId}` : Ajouter ou retirer un produit
+- `GET /api/wishlist/shared/{token}` : Accéder à une wishlist publique (via lien de partage)
 
 ---
 *Personnalisé et Amélioré par Antigravity AI*
