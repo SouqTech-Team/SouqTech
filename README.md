@@ -97,3 +97,5 @@ Ce projet utilise une approche double CI/CD pour une fiabilit√© maximale :
 *Projet SouqTech - Infrastructure Valid√©e*
 
 ---
+
+* VÈrification du pipeline CI/CD : JaCoCo activÈ (Test du 11 Janvier)
