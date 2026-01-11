@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+        pollSCM('* * * * *') // Check for changes every minute
+    }
+
     tools {
         // Assurez-vous d'avoir configuré Maven et JDK 17 dans "Global Tool Configuration" de Jenkins
         // Adaptez les noms si nécessaire (ex: "Maven 3.9", "JDK 17")
