@@ -14,11 +14,7 @@ pipeline {
     }
 
     environment {
-        // Pour activer SonarCloud sur Jenkins :
-        // 1. Ajoutez votre token Sonar comme "Secret text" dans les identifiants Jenkins (ID: sonar-token)
-        // 2. Décommentez la section environment et le stage 'SonarCloud Analysis' ci-dessous
-        
-        // SONAR_TOKEN = credentials('sonar-token') 
+        SONAR_TOKEN = credentials('sonar-token') 
     }
 
     stages {
@@ -42,28 +38,20 @@ pipeline {
             }
         }
 
-        /* 
-        // --- Stage SonarCloud (Optionnel) ---
-        // Nécessite le plugin SonarQube Scanner sur Jenkins
         stage('SonarCloud Analysis') {
             steps {
                 dir('src/backend') {
                     script {
                          def sonarCommand = 'mvn sonar:sonar -Dsonar.organization=souqtech-team -Dsonar.projectKey=SouqTech-Team_SouqTech -Dsonar.host.url=https://sonarcloud.io'
                          if (isUnix()) {
-                            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                                sh sonarCommand
-                            }
+                            sh sonarCommand
                         } else {
-                            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                                bat sonarCommand
-                            }
+                            bat sonarCommand
                         }
                     }
                 }
             }
         }
-        */
     }
 
     post {
