@@ -91,8 +91,9 @@ Ce projet utilise une approche double CI/CD pour une fiabilité maximale :
    - Fonctionne sur un environnement local via un tunnel `ngrok`.
    - **Domaine Statique** : `https://overwary-lien-tremulously.ngrok-free.dev`
    - Gère les tâches de build locales et fournit un tableau de bord détaillé.
+   - **Trigger automatique** : Configuré avec Webhook + Poll SCM (1 min).
 
 ---
-*Projet SouqTech*
+*Projet SouqTech - Infrastructure Validée*
 
 ---
