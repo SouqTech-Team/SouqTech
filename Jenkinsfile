@@ -71,7 +71,7 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push') {
+        stage('Docker Build & Push Backend') {
             steps {
                 dir('src/backend') {
                     script {
@@ -85,6 +85,27 @@ pipeline {
                             bat "docker build -t %DOCKER_IMAGE%:latest -t %DOCKER_IMAGE%:%BUILD_NUMBER% ."
                             bat "docker push %DOCKER_IMAGE%:latest"
                             bat "docker push %DOCKER_IMAGE%:%BUILD_NUMBER%"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build & Push Frontend') {
+            steps {
+                dir('src/frontend') {
+                    script {
+                        def frontendImage = "seifeddine77/souqtech-frontend"
+                        if (isUnix()) {
+                            sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
+                            sh "docker build -t ${frontendImage}:latest -t ${frontendImage}:${BUILD_NUMBER} ."
+                            sh "docker push ${frontendImage}:latest"
+                            sh "docker push ${frontendImage}:${BUILD_NUMBER}"
+                        } else {
+                            bat "docker login -u %DOCKER_CREDS_USR% -p %DOCKER_CREDS_PSW%"
+                            bat "docker build -t ${frontendImage}:latest -t ${frontendImage}:%BUILD_NUMBER% ."
+                            bat "docker push ${frontendImage}:latest"
+                            bat "docker push ${frontendImage}:%BUILD_NUMBER%"
                         }
                     }
                 }
