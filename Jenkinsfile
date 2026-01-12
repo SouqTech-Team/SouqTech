@@ -14,7 +14,9 @@ pipeline {
     }
 
     environment {
-        SONAR_TOKEN = credentials('sonar-token') 
+        SONAR_TOKEN = credentials('sonar-token')
+        DOCKER_CREDS = credentials('dockerhub-credentials')
+        DOCKER_IMAGE = "saifeddine/souqtech-backend" 
     }
 
     stages {
@@ -38,6 +40,21 @@ pipeline {
             }
         }
 
+        stage('Build Frontend') {
+            steps {
+                dir('src/frontend') {
+                    script {
+                        if (isUnix()) {
+                            sh 'npm install && npm run build -- --configuration production'
+                        } else {
+                            bat 'npm install'
+                            bat 'npm run build -- --configuration production'
+                        }
+                    }
+                }
+            }
+        }
+
         stage('SonarCloud Analysis') {
             steps {
                 dir('src/backend') {
@@ -47,6 +64,26 @@ pipeline {
                             sh sonarCommand
                         } else {
                             bat sonarCommand
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                dir('src/backend') {
+                    script {
+                        if (isUnix()) {
+                            sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
+                            sh "docker build -t ${DOCKER_IMAGE}:latest -t ${DOCKER_IMAGE}:${BUILD_NUMBER} ."
+                            sh "docker push ${DOCKER_IMAGE}:latest"
+                            sh "docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                        } else {
+                            bat "docker login -u %DOCKER_CREDS_USR% -p %DOCKER_CREDS_PSW%"
+                            bat "docker build -t %DOCKER_IMAGE%:latest -t %DOCKER_IMAGE%:%BUILD_NUMBER% ."
+                            bat "docker push %DOCKER_IMAGE%:latest"
+                            bat "docker push %DOCKER_IMAGE%:%BUILD_NUMBER%"
                         }
                     }
                 }
