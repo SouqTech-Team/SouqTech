@@ -11,12 +11,13 @@ pipeline {
         // Adaptez les noms si nécessaire (ex: "Maven 3.9", "JDK 17")
         maven 'Maven 3' 
         jdk 'Java 17'
+        nodejs 'node'
     }
 
     environment {
         SONAR_TOKEN = credentials('sonar-token')
         DOCKER_CREDS = credentials('dockerhub-credentials')
-        DOCKER_IMAGE = "saifeddine/souqtech-backend" 
+        DOCKER_IMAGE = "seifeddine77/souqtech-backend" 
     }
 
     stages {
