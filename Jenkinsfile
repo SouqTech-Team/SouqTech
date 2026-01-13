@@ -7,8 +7,6 @@ pipeline {
     }
 
     tools {
-        // Assurez-vous d'avoir configuré Maven et JDK 17 dans "Global Tool Configuration" de Jenkins
-        // Adaptez les noms si nécessaire (ex: "Maven 3.9", "JDK 17")
         maven 'Maven 3' 
         jdk 'Java 17'
         nodejs 'node'
@@ -23,12 +21,14 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                echo '[INFO] Recuperation du code source depuis GitHub...'
                 checkout scm
             }
         }
 
         stage('Build & Test Backend') {
             steps {
+                echo '[INFO] Demarrage de la compilation et des tests Backend (Spring Boot)...'
                 dir('src/backend') {
                     script {
                         if (isUnix()) {
@@ -43,6 +43,7 @@ pipeline {
 
         stage('Build Frontend') {
             steps {
+                echo '[INFO] Demarrage de la compilation Frontend (Angular)...'
                 dir('src/frontend') {
                     script {
                         if (isUnix()) {
@@ -58,6 +59,7 @@ pipeline {
 
         stage('SonarCloud Analysis') {
             steps {
+                echo '[INFO] Analyse de la qualite du code avec SonarCloud...'
                 dir('src/backend') {
                     script {
                          def sonarCommand = 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=souqtech-team -Dsonar.projectKey=SouqTech-Team_SouqTech -Dsonar.host.url=https://sonarcloud.io'
@@ -73,6 +75,7 @@ pipeline {
 
         stage('Docker Build & Push Backend') {
             steps {
+                echo '[INFO] Construction et Push de l\'image Docker Backend...'
                 dir('src/backend') {
                     script {
                         if (isUnix()) {
@@ -93,6 +96,7 @@ pipeline {
 
         stage('Docker Build & Push Frontend') {
             steps {
+                echo '[INFO] Construction et Push de l\'image Docker Frontend...'
                 dir('src/frontend') {
                     script {
                         def frontendImage = "seifeddine77/souqtech-frontend"
@@ -125,10 +129,10 @@ pipeline {
                    exclusionPattern: '**/dto/**,**/entity/**,**/error/**,**/config/**'
         }
         success {
-            echo 'Build Backend réussi !'
+            echo "[SUCCESS] BUILD REUSSI ! La version ${BUILD_NUMBER} est deployee sur Docker Hub."
         }
         failure {
-            echo 'Build Backend échoué.'
+            echo "[FAILURE] BUILD ECHOUE... Veuillez verifier les logs pour corriger l'erreur."
         }
     }
 }
