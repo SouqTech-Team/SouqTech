@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, delay, of, take, tap, throwError } from 'rxjs';
 import { Product } from '../shared/models/product.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { PageableResponse } from '../shared/models/pageable.response.model';
 
 @Injectable({
