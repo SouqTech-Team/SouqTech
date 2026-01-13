@@ -5,99 +5,74 @@ Bienvenue sur **SouqTech**, une version professionnelle et robuste d'une platefo
 ## ✨ Fonctionnalités Uniques (Version Pro)
 
 ### ⭐ Système d'Avis et Notes (Reviews)
-- Les utilisateurs peuvent noter les produits (1-5 étoiles)
-- Commentaires détaillés
-- Calcul automatique de la moyenne
-- Badge "Achat Vérifié" (Backend Ready)
-- Vote "Utile" sur les avis
+*   Les utilisateurs peuvent noter les produits (1-5 étoiles)
+*   Commentaires détaillés
+*   Calcul automatique de la moyenne
+*   Badge "Achat Vérifié" (Backend Ready)
+*   Vote "Utile" sur les avis
 
 ### ❤️ Liste de Souhaits (Wishlist)
-- Ajouter/Retirer des produits en un clic
-- **Partage Social** : Partagez votre wishlist avec un lien unique
-- Mode Privé/Public
+*   Ajouter/Retirer des produits en un clic
+*   **Partage Social** : Partagez votre wishlist avec un lien unique
+*   Mode Privé/Public
 
 ### 🛒 Fonctionnalités de base
-- Catalogue complet avec pagination
-- Recherche avancée
-- Panier persistant
-- Authentification Sécurisée (JWT)
-- Gestion de profil
+*   Catalogue complet avec pagination
+*   Recherche avancée
+*   Panier persistant
+*   Authentification Sécurisée (JWT)
+*   Gestion de profil
 
 ## 🛠️ Stack Technique
 
-- **Frontend** : Angular 16, Material Design, RxJS
-- **Backend** : Spring Boot 3, Spring Security, JPA
-- **Database** : MySQL 8
-- **Documentation** : OpenAPI 3 (Swagger)
+### Backend (Spring Boot 3)
+*   **Java 17** : Langage robuste et moderne
+*   **Spring Boot 3** : Framework entreprise
+*   **Spring Security + JWT** : Sécurité de niveau bancaire
+*   **Hibernate / JPA** : Gestion de données performante
+*   **MySQL / H2** : Base de données flexible
+*   **Lombok** : Code propre et concis
+*   **Maven** : Gestion de dépendances
 
-## 🚀 Installation Rapide
+### Frontend (Angular 16+)
+*   **Angular** : Framework puissant pour SPA
+*   **TypeScript** : Typage fort pour moins de bugs
+*   **Bootstrap 5** : Design responsive et moderne
+*   **RxJS** : Programmation réactive
+*   **Nginx** : Serveur web haute performance pour le déploiement
 
-1. **Base de données**
-   ```sql
-   CREATE DATABASE `sb-ecommerce-dev`;
-   ```
-
-2. **Lancer le Backend**
-   ```bash
-   cd src/backend
-   mvn spring-boot:run
-   ```
-
-3. **Lancer le Frontend**
-   ```bash
-   cd src/frontend
-   ng serve
-   ```
-
-## 📚 Documentation API
-
-Une fois lancé, accédez à Swagger UI pour tester en direct : `http://localhost:8080/swagger-ui.html`
-
-### 🔐 Authentification
-- `POST /api/auth/register` : Création de compte client
-- `POST /api/auth/login` : Connexion et obtention du Token JWT
-
-### 📦 Produits & Catalogue
-- `GET /api/products` : Liste des produits (paginée, recherche par nom/catégorie)
-- `GET /api/products/{id}` : Détails complets d'un produit
-- `GET /api/product-category` : Liste des catégories disponibles
-
-### 🛒 Commandes & Panier
-- `POST /api/checkout/purchase` : Valider et payer une commande
-- `GET /api/orders` : Historique des commandes de l'utilisateur connecté
-
-### ⭐ Avis & Notes (Reviews)
-- `POST /api/reviews` : Ajouter un avis sur un produit
-- `GET /api/reviews/product/{productId}` : Consulter les avis d'un produit
-
-
-### ❤️ Liste de Souhaits (Wishlist)
-- `GET /api/wishlist` : Consulter ma wishlist
-- `PUT /api/wishlist/toggle/{productId}` : Ajouter ou retirer un produit
-- `GET /api/wishlist/shared/{token}` : Accéder à une wishlist publique (via lien de partage)
+### DevOps & Outils 🐳 (Nouveau !)
+*   **Docker** : Conteneurisation complète (Frontend + Backend)
+*   **Docker Compose** : Orchestration simplifiée
+*   **Jenkins** : Pipeline CI/CD automatisé
+*   **SonarCloud** : Analyse de la qualité du code (96% de couverture !)
 
 ---
 
-## 🚀 Infrastructure CI/CD
+## 🚀 Comment lancer le projet ?
 
-Ce projet utilise une approche double CI/CD pour une fiabilité maximale :
+### Prérequis
+*   Docker Desktop installé
 
-1. **GitHub Actions (Cloud CI)** :
-   - Déclenchée automatiquement à chaque push sur `main`.
-   - Exécute les builds Maven et les tests dans le cloud.
-   - Intégrée avec SonarCloud pour l'analyse de qualité.
-
-2. **Jenkins (Local CI)** :
-   - Fonctionne sur un environnement local via un tunnel `ngrok`.
-   - **Domaine Statique** : `https://overwary-lien-tremulously.ngrok-free.dev`
-   - Gère les tâches de build locales et fournit un tableau de bord détaillé.
-   - **Trigger automatique** : Configuré avec Webhook + Poll SCM (1 min).
-
----
-*Projet SouqTech - Infrastructure Validée*
+### Démarrage Rapide (Recommandé)
+1.  Ouvrez un terminal à la racine du projet.
+2.  Lancez la commande magique :
+    ```bash
+    docker-compose up -d
+    ```
+3.  Accédez à l'application :
+    *   **Site Web** : [http://localhost](http://localhost)
+    *   **API** : [http://localhost:8081/api/v1/product](http://localhost:8081/api/v1/product)
 
 ---
 
-* V�rification du pipeline CI/CD : JaCoCo activ� (Test du 11 Janvier)
+## 🧪 Qualité du Code
+Le projet suit les meilleures pratiques de développement :
+*   Architecture en couches (Controller, Service, Repository)
+*   DTOs pour le transfert de données
+*   Gestion globale des exceptions
+*   Tests unitaires et d'intégration robustes
 
-* [Test Trigger] Validation de la couverture SonarCloud
+---
+
+**Réalisé par l'équipe SouqTech** - *Seif Eddine Rezgui*
