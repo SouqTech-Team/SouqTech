@@ -41,7 +41,7 @@ Bienvenue sur **SouqTech**, une version professionnelle et robuste d'une platefo
 *   **RxJS** : Programmation réactive
 *   **Nginx** : Serveur web haute performance pour le déploiement
 
-### DevOps & Outils 🐳 (Nouveau !)
+### DevOps & Outils 🐳 
 *   **Docker** : Conteneurisation complète (Frontend + Backend)
 *   **Docker Compose** : Orchestration simplifiée
 *   **Jenkins** : Pipeline CI/CD automatisé
