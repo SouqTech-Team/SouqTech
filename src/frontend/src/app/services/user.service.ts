@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, delay } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/auth.model';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { User } from '../shared/models/auth.model';
 export class UserService {
   private API_URL = `${environment.apiUrl}/user`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // PATCH /user {user}
   public updateUser$(userUpdated: User): Observable<boolean> {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, delay, of, take, tap, throwError } from 'rxjs';
 import { Product } from '../shared/models/product.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 import { PageableResponse } from '../shared/models/pageable.response.model';
 
 @Injectable({
@@ -11,7 +11,7 @@ import { PageableResponse } from '../shared/models/pageable.response.model';
 export class ProductService {
   API_URL = `${environment.apiUrl}/product`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // GET /product?q=[q]&pageIndex=[pageIndex]&pageSize=[pageSize]  {}
   products$ = (q: string, pageIndex: number, pageSize: number) =>

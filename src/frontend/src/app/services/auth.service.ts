@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, distinctUntilChanged, map, tap, concatMap, EMPTY, catchError, of, startWith, delay } from 'rxjs';
 import { SignInRequest, SignInResponse, SignUpRequest, SignUpResponse, User } from '../shared/models/auth.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 import { JwtService } from './jwt.service';
 import { Router } from '@angular/router';
 
@@ -17,7 +17,7 @@ export class AuthService {
 
   public isAuthenticated$: Observable<boolean> = this.currentUserSubject$.asObservable().pipe(map((user) => !!user));
 
-  constructor(private http: HttpClient, private jwtService: JwtService, private router: Router) {}
+  constructor(private http: HttpClient, private jwtService: JwtService, private router: Router) { }
 
   public logout(): void {
     this.jwtService.destroyToken();

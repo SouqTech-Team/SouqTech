@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { take, startWith, Observable, catchError, of, tap, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 import { ProductCategory } from '../shared/models/product.category.model';
 
 @Injectable({
@@ -18,8 +18,8 @@ export class ProductCategoryService {
   }
 
   // GET /category {}
-  productCategories$ = <Observable<ProductCategory[]>> this.http.get<ProductCategory[]>(`${this.API_URL}`).pipe(catchError(this.handleError));
-  
+  productCategories$ = <Observable<ProductCategory[]>>this.http.get<ProductCategory[]>(`${this.API_URL}`).pipe(catchError(this.handleError));
+
 
   // GET /category/[id] {}
   public getProductCategory(id: number): Observable<ProductCategory> {

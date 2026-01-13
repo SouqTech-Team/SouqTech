@@ -2,11 +2,9 @@ version: '3.8'
 
 services:
   backend:
-    build:
-      context: ./src/backend
-      dockerfile: Dockerfile
+    image: seifeddine77/souqtech-backend:latest
     ports:
-      - "8080:8080"
+      - "8081:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
@@ -14,9 +12,7 @@ services:
       - souqtech-net
 
   frontend:
-    build:
-      context: ./src/frontend
-      dockerfile: Dockerfile
+    image: seifeddine77/souqtech-frontend:latest
     ports:
       - "80:80"
     depends_on:

@@ -4,7 +4,7 @@ application:
   description: "Plateforme e-commerce moderne SouqTech - Projet Fédérateur"
 
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
@@ -27,7 +27,7 @@ spring:
 
 web:
   cors:
-    allowed-origins: "http://localhost:4200"
+    allowed-origins: "http://localhost:4200, http://localhost:8080"
     allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
     max-age: 3600
     allowed-headers: "*"
