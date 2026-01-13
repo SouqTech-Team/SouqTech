@@ -75,4 +75,4 @@ Le projet suit les meilleures pratiques de développement :
 
 ---
 
-**Réalisé par l'équipe SouqTech** - *Seif Eddine Rezgui*
+**Réalisé par l'équipe SouqTech** - * Selmi Houssem  - Rezgui Seif Eddine *
