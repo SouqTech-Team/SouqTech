@@ -73,6 +73,6 @@ Le projet suit les meilleures pratiques de développement :
 *   Gestion globale des exceptions
 *   Tests unitaires et d'intégration robustes
 
----
+----
 
 **Réalisé par l'équipe SouqTech** - * Selmi Houssem  - Rezgui Seif Eddine *
