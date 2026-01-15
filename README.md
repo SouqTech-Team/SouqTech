@@ -76,3 +76,7 @@ Le projet suit les meilleures pratiques de développement :
 ----
 
 **Réalisé par l'équipe SouqTech** - * Selmi Houssem  - Rezgui Seif Eddine *
+
+---
+*Dernière mise à jour : Test de déclenchement CI/CD (GitHub Actions & Jenkins) effectué le 15 Janvier 2026.*
+
