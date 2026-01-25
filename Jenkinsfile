@@ -135,4 +135,67 @@ pipeline {
             echo "[FAILURE] BUILD ECHOUE... Veuillez verifier les logs pour corriger l'erreur."
         }
     }
+
+    stage('Deploy to Production') {
+        steps {
+            echo '[INFO] Déploiement automatique de l\'application...'
+            script {
+                try {
+                    if (isUnix()) {
+                        // Arrêter les anciens conteneurs
+                        sh 'docker-compose down || true'
+                        
+                        // Récupérer les nouvelles images depuis Docker Hub
+                        sh 'docker-compose pull'
+                        
+                        // Démarrer les nouveaux conteneurs
+                        sh 'docker-compose up -d'
+                        
+                        // Attendre que les services démarrent
+                        echo '[INFO] Attente du démarrage des services (60 secondes)...'
+                        sh 'sleep 60'
+                        
+                        // Vérifier que le backend est accessible
+                        echo '[INFO] Vérification du backend...'
+                        sh 'curl -f http://localhost:8081/actuator/health || exit 1'
+                        
+                        // Vérifier que le frontend est accessible
+                        echo '[INFO] Vérification du frontend...'
+                        sh 'curl -f http://localhost:80 || exit 1'
+                        
+                        echo '[SUCCESS] Déploiement réussi ! Application accessible.'
+                    } else {
+                        // Windows
+                        bat 'docker-compose down || exit 0'
+                        bat 'docker-compose pull'
+                        bat 'docker-compose up -d'
+                        
+                        echo '[INFO] Attente du démarrage des services (60 secondes)...'
+                        bat 'timeout /t 60 /nobreak'
+                        
+                        echo '[INFO] Vérification du backend...'
+                        bat 'curl -f http://localhost:8081/actuator/health || exit 1'
+                        
+                        echo '[INFO] Vérification du frontend...'
+                        bat 'curl -f http://localhost:80 || exit 1'
+                        
+                        echo '[SUCCESS] Déploiement réussi ! Application accessible.'
+                    }
+                } catch (Exception e) {
+                    echo '[ERROR] Le déploiement a échoué !'
+                    echo '[INFO] Tentative de rollback...'
+                    
+                    if (isUnix()) {
+                        sh 'docker-compose down'
+                        sh 'docker-compose up -d'
+                    } else {
+                        bat 'docker-compose down'
+                        bat 'docker-compose up -d'
+                    }
+                    
+                    error("Déploiement échoué. Rollback effectué.")
+                }
+            }
+        }
+    }
 }

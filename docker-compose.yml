@@ -3,6 +3,7 @@ version: '3.8'
 services:
   backend:
     image: seifeddine77/souqtech-backend:latest
+    container_name: souqtech-backend
     ports:
       - "8081:8081"
     environment:
@@ -10,15 +11,47 @@ services:
       - JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
     networks:
       - souqtech-net
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8081/actuator/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   frontend:
     image: seifeddine77/souqtech-frontend:latest
+    container_name: souqtech-frontend
     ports:
       - "80:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - souqtech-net
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80 || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
 networks:
   souqtech-net:
