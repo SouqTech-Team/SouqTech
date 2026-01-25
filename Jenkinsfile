@@ -121,26 +121,42 @@ pipeline {
                 echo '[INFO] Déploiement automatique de l\'application...'
                 script {
                     try {
+                        def backendImage = "seifeddine77/souqtech-backend:latest"
+                        def frontendImage = "seifeddine77/souqtech-frontend:latest"
+                        def netName = "souqtech-net"
+                        def jwtSecret = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+
                         if (isUnix()) {
-                            // On utilise une image Docker contenant compose pour éviter les problèmes d'installation dans Jenkins
-                            def composeCmd = 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:$PWD" -w "$PWD" docker/compose:latest'
-                            
-                            sh "${composeCmd} down || true"
-                            sh "${composeCmd} pull"
-                            sh "${composeCmd} up -d"
-                            
-                            echo '[INFO] Attente du démarrage des services (60 secondes)...'
-                            sh 'sleep 60'
-                            
-                            echo '[INFO] Vérification du backend...'
-                            sh 'curl -f http://localhost:8081/actuator/health || exit 1'
-                            
-                            echo '[SUCCESS] Déploiement réussi ! Application accessible.'
+                            // 1. Créer le réseau si nécessaire
+                            sh "docker network create ${netName} || true"
+
+                            // 2. Déployer le Backend
+                            echo "[INFO] Mise à jour du Backend..."
+                            sh "docker pull ${backendImage}"
+                            sh "docker stop souqtech-backend || true"
+                            sh "docker rm souqtech-backend || true"
+                            sh "docker run -d --name souqtech-backend --network ${netName} -p 8081:8081 -e SPRING_PROFILES_ACTIVE=prod -e JWT_SECRET=${jwtSecret} --restart unless-stopped ${backendImage}"
+
+                            // 3. Attendre le démarrage
+                            echo "[INFO] Attente du démarrage du backend (45 secondes)..."
+                            sh "sleep 45"
+
+                            // 4. Déployer le Frontend
+                            echo "[INFO] Mise à jour du Frontend..."
+                            sh "docker pull ${frontendImage}"
+                            sh "docker stop souqtech-frontend || true"
+                            sh "docker rm souqtech-frontend || true"
+                            sh "docker run -d --name souqtech-frontend --network ${netName} -p 80:80 --restart unless-stopped ${frontendImage}"
+
+                            // 5. Vérification
+                            echo "[INFO] Vérification de l'accès santé..."
+                            sh "curl -f http://localhost:8081/actuator/health || exit 1"
+
+                            echo '[SUCCESS] Déploiement réussi ! Application accessible sur http://localhost'
                         } else {
-                            // Fallback pour Windows si Jenkins tournait hors Docker (peu probable ici)
-                            bat 'docker compose down || exit 0'
-                            bat 'docker compose pull'
-                            bat 'docker compose up -d'
+                            // Fallback Windows (peu probable)
+                            bat "docker network create ${netName} || exit 0"
+                            bat "docker stop souqtech-backend || exit 0"
                         }
                     } catch (Exception e) {
                         echo "[ERROR] Le déploiement a échoué : ${e.message}"
