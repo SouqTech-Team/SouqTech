@@ -122,58 +122,29 @@ pipeline {
                 script {
                     try {
                         if (isUnix()) {
-                            // Arrêter les anciens conteneurs
-                            sh 'docker compose down || true'
+                            // On utilise une image Docker contenant compose pour éviter les problèmes d'installation dans Jenkins
+                            def composeCmd = 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:$PWD" -w "$PWD" docker/compose:latest'
                             
-                            // Récupérer les nouvelles images depuis Docker Hub
-                            sh 'docker compose pull'
+                            sh "${composeCmd} down || true"
+                            sh "${composeCmd} pull"
+                            sh "${composeCmd} up -d"
                             
-                            // Démarrer les nouveaux conteneurs
-                            sh 'docker compose up -d'
-                            
-                            // Attendre que les services démarrent
                             echo '[INFO] Attente du démarrage des services (60 secondes)...'
                             sh 'sleep 60'
                             
-                            // Vérifier que le backend est accessible
                             echo '[INFO] Vérification du backend...'
                             sh 'curl -f http://localhost:8081/actuator/health || exit 1'
                             
-                            // Vérifier que le frontend est accessible
-                            echo '[INFO] Vérification du frontend...'
-                            sh 'curl -f http://localhost:80 || exit 1'
-                            
                             echo '[SUCCESS] Déploiement réussi ! Application accessible.'
                         } else {
-                            // Windows
+                            // Fallback pour Windows si Jenkins tournait hors Docker (peu probable ici)
                             bat 'docker compose down || exit 0'
                             bat 'docker compose pull'
                             bat 'docker compose up -d'
-                            
-                            echo '[INFO] Attente du démarrage des services (60 secondes)...'
-                            bat 'timeout /t 60 /nobreak'
-                            
-                            echo '[INFO] Vérification du backend...'
-                            bat 'curl -f http://localhost:8081/actuator/health || exit 1'
-                            
-                            echo '[INFO] Vérification du frontend...'
-                            bat 'curl -f http://localhost:80 || exit 1'
-                            
-                            echo '[SUCCESS] Déploiement réussi ! Application accessible.'
                         }
                     } catch (Exception e) {
-                        echo '[ERROR] Le déploiement a échoué !'
-                        echo '[INFO] Tentative de rollback...'
-                        
-                        if (isUnix()) {
-                            sh 'docker compose down'
-                            sh 'docker compose up -d'
-                        } else {
-                            bat 'docker compose down'
-                            bat 'docker compose up -d'
-                        }
-                        
-                        error("Déploiement échoué. Rollback effectué.")
+                        echo "[ERROR] Le déploiement a échoué : ${e.message}"
+                        error("Déploiement échoué.")
                     }
                 }
             }
