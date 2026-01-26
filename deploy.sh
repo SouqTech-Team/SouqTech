@@ -25,6 +25,24 @@ echo "📥 Téléchargement des dernières images..."
 docker pull $BACKEND_IMAGE
 docker pull $FRONTEND_IMAGE
 
+# 3.5. Démarrer MySQL si nécessaire
+echo "🗄️ Vérification de MySQL..."
+if ! docker ps | grep -q mysql; then
+    echo "Démarrage de MySQL..."
+    docker run -d \
+      --name mysql \
+      --network $NETWORK_NAME \
+      -e MYSQL_ROOT_PASSWORD=root \
+      -e MYSQL_DATABASE=souqtech_db \
+      -e MYSQL_USER=souqtech \
+      -e MYSQL_PASSWORD=souqtech \
+      mysql:8.0
+    echo "⏳ Attente du démarrage de MySQL (15 secondes)..."
+    sleep 15
+else
+    echo "✅ MySQL déjà en cours d'exécution"
+fi
+
 # 4. Démarrer le backend
 echo "🔧 Démarrage du backend..."
 if ! docker run -d \
@@ -32,6 +50,11 @@ if ! docker run -d \
   --network $NETWORK_NAME \
   -p 8081:8081 \
   -e SPRING_PROFILES_ACTIVE=prod \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://mysql:3306/souqtech_db?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true" \
+  -e SPRING_DATASOURCE_USERNAME=souqtech \
+  -e SPRING_DATASOURCE_PASSWORD=souqtech \
+  -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect \
+  -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
   -e JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970 \
   --restart unless-stopped \
   $BACKEND_IMAGE; then
