@@ -14,11 +14,18 @@ RUN mvn package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
+# Installer curl pour le healthcheck
+RUN apk add --no-cache curl
+
 # Copy the built jar from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
 # Expose port 8081
 EXPOSE 8081
+
+# Healthcheck natif
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=60s \
+    CMD curl -f http://localhost:8081/actuator/health || exit 1
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

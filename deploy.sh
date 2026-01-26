@@ -76,11 +76,15 @@ MAX_RETRIES=75
 RETRY_COUNT=0
 
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    # Vérification interne via docker exec (plus fiable que réseau externe)
-    if docker exec souqtech-backend wget --quiet --tries=1 --spider http://localhost:8081/actuator/health > /dev/null 2>&1; then
-        echo "✅ Backend opérationnel après $((RETRY_COUNT * 2)) secondes !"
+    # On demande directement à Docker si le conteneur est "healthy"
+    HEALTH_STATUS=$(docker inspect --format='{{.State.Health.Status}}' souqtech-backend 2>/dev/null)
+    
+    if [ "$HEALTH_STATUS" = "healthy" ]; then
+        echo "✅ Backend opérationnel et healthy !"
         break
     fi
+    
+    echo "⏳ Statut actuel: $HEALTH_STATUS (Tentative $RETRY_COUNT/$MAX_RETRIES)..."
     
     RETRY_COUNT=$((RETRY_COUNT + 1))
     if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
