@@ -121,6 +121,9 @@ pipeline {
                 echo '[INFO] 🚀 Déploiement automatique de l\'application...'
                 script {
                     if (isUnix()) {
+                        // Correction des fins de ligne Windows -> Linux (CRLF -> LF)
+                        sh "sed -i 's/\\r\$//' deploy.sh"
+                        
                         // Rendre le script exécutable et le lancer
                         sh 'chmod +x deploy.sh'
                         sh './deploy.sh'
