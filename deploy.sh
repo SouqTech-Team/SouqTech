@@ -27,9 +27,12 @@ docker pull $BACKEND_IMAGE
 docker pull $FRONTEND_IMAGE
 
 # 3.5. Démarrer MySQL si nécessaire
-echo "🗄️ Vérification de MySQL..."
-if ! docker ps | grep -q mysql; then
-    echo "Démarrage de MySQL..."
+echo "🗄️ Vérification de MySQL (Pipeline)..."
+# On cherche le nom EXACT "mysql"
+if ! docker ps --format '{{.Names}}' | grep -q "^mysql$"; then
+    echo "Démarrage de MySQL dédié au pipeline..."
+    # On supprime au cas où un conteneur arrêté porte déjà ce nom
+    docker rm -f mysql 2>/dev/null || true
     docker run -d \
       --name mysql \
       --network $NETWORK_NAME \
@@ -38,10 +41,10 @@ if ! docker ps | grep -q mysql; then
       -e MYSQL_USER=souqtech \
       -e MYSQL_PASSWORD="S0uqT3ch$3cur3P@ss2026!" \
       mysql:8.0
-    echo "⏳ Attente du démarrage de MySQL (15 secondes)..."
-    sleep 15
+    echo "⏳ Attente du démarrage de MySQL (20 secondes)..."
+    sleep 20
 else
-    echo "✅ MySQL déjà en cours d'exécution"
+    echo "✅ MySQL (Pipeline) déjà en cours d'exécution"
 fi
 
 # 4. Démarrer le backend
