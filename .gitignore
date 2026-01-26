@@ -8,6 +8,16 @@ dist/
 *.log
 .DS_Store
 
+# Secrets et fichiers sensibles - NE JAMAIS COMMITER
+*secret*.yaml
+*.secret.yaml
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*-backup.yaml
+
 # Documentation files (for local use only)
 *.md
 !README.md

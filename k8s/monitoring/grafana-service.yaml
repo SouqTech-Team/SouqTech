@@ -3,10 +3,16 @@ kind: Service
 metadata:
   name: grafana-service
   namespace: monitoring
+  labels:
+    app: grafana
+    component: monitoring
 spec:
   selector:
     app: grafana
-  ports:
-    - port: 3000
-      targetPort: 3000
   type: NodePort
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      nodePort: 30300  # Port fixe pour accès externe
+      protocol: TCP

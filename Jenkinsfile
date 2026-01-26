@@ -3,7 +3,7 @@ pipeline {
 
     triggers {
         githubPush()
-        pollSCM('* * * * *') // Check for changes every minute
+        // pollSCM désactivé - utiliser uniquement les webhooks GitHub
     }
 
     tools {
@@ -79,12 +79,12 @@ pipeline {
                 dir('src/backend') {
                     script {
                         if (isUnix()) {
-                            sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
+                            sh "echo '${DOCKER_CREDS_PSW}' | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
                             sh "docker build -t ${DOCKER_IMAGE}:latest -t ${DOCKER_IMAGE}:${BUILD_NUMBER} ."
                             sh "docker push ${DOCKER_IMAGE}:latest"
                             sh "docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}"
                         } else {
-                            bat "docker login -u %DOCKER_CREDS_USR% -p %DOCKER_CREDS_PSW%"
+                            bat "echo %DOCKER_CREDS_PSW% | docker login -u %DOCKER_CREDS_USR% --password-stdin"
                             bat "docker build -t %DOCKER_IMAGE%:latest -t %DOCKER_IMAGE%:%BUILD_NUMBER% ."
                             bat "docker push %DOCKER_IMAGE%:latest"
                             bat "docker push %DOCKER_IMAGE%:%BUILD_NUMBER%"
@@ -101,12 +101,12 @@ pipeline {
                     script {
                         def frontendImage = "seifeddine77/souqtech-frontend"
                         if (isUnix()) {
-                            sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
+                            sh "echo '${DOCKER_CREDS_PSW}' | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
                             sh "docker build -t ${frontendImage}:latest -t ${frontendImage}:${BUILD_NUMBER} ."
                             sh "docker push ${frontendImage}:latest"
                             sh "docker push ${frontendImage}:${BUILD_NUMBER}"
                         } else {
-                            bat "docker login -u %DOCKER_CREDS_USR% -p %DOCKER_CREDS_PSW%"
+                            bat "echo %DOCKER_CREDS_PSW% | docker login -u %DOCKER_CREDS_USR% --password-stdin"
                             bat "docker build -t ${frontendImage}:latest -t ${frontendImage}:%BUILD_NUMBER% ."
                             bat "docker push ${frontendImage}:latest"
                             bat "docker push ${frontendImage}:%BUILD_NUMBER%"
@@ -146,6 +146,15 @@ pipeline {
                    classPattern: 'src/backend/target/classes', 
                    sourcePattern: 'src/backend/src/main/java', 
                    exclusionPattern: '**/dto/**,**/entity/**,**/error/**,**/config/**'
+            
+            // Nettoyage des anciennes images Docker
+            script {
+                if (isUnix()) {
+                    sh 'docker image prune -f --filter "until=24h"'
+                } else {
+                    bat 'docker image prune -f --filter "until=24h"'
+                }
+            }
         }
         success {
             echo "[SUCCESS] BUILD REUSSI ! La version ${BUILD_NUMBER} est deployee sur Docker Hub."
