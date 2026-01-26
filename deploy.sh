@@ -33,10 +33,10 @@ if ! docker ps | grep -q mysql; then
     docker run -d \
       --name mysql \
       --network $NETWORK_NAME \
-      -e MYSQL_ROOT_PASSWORD=root \
+      -e MYSQL_ROOT_PASSWORD="MyS3cur3R00tP@ssw0rd!2026" \
       -e MYSQL_DATABASE=souqtech_db \
       -e MYSQL_USER=souqtech \
-      -e MYSQL_PASSWORD=souqtech \
+      -e MYSQL_PASSWORD="S0uqT3ch$3cur3P@ss2026!" \
       mysql:8.0
     echo "⏳ Attente du démarrage de MySQL (15 secondes)..."
     sleep 15
@@ -53,7 +53,7 @@ if ! docker run -d \
   -e SPRING_PROFILES_ACTIVE=prod \
   -e SPRING_DATASOURCE_URL="jdbc:mysql://mysql:3306/souqtech_db?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true" \
   -e SPRING_DATASOURCE_USERNAME=souqtech \
-  -e SPRING_DATASOURCE_PASSWORD=souqtech \
+  -e SPRING_DATASOURCE_PASSWORD="S0uqT3ch$3cur3P@ss2026!" \
   -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect \
   -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
   -e JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970 \
