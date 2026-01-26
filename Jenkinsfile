@@ -80,12 +80,12 @@ pipeline {
                     script {
                         if (isUnix()) {
                             sh "echo '${DOCKER_CREDS_PSW}' | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
-                            sh "docker build -t ${DOCKER_IMAGE}:latest -t ${DOCKER_IMAGE}:${BUILD_NUMBER} ."
+                            sh "docker build --no-cache -t ${DOCKER_IMAGE}:latest -t ${DOCKER_IMAGE}:${BUILD_NUMBER} ."
                             sh "docker push ${DOCKER_IMAGE}:latest"
                             sh "docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}"
                         } else {
                             bat "echo %DOCKER_CREDS_PSW% | docker login -u %DOCKER_CREDS_USR% --password-stdin"
-                            bat "docker build -t %DOCKER_IMAGE%:latest -t %DOCKER_IMAGE%:%BUILD_NUMBER% ."
+                            bat "docker build --no-cache -t %DOCKER_IMAGE%:latest -t %DOCKER_IMAGE%:%BUILD_NUMBER% ."
                             bat "docker push %DOCKER_IMAGE%:latest"
                             bat "docker push %DOCKER_IMAGE%:%BUILD_NUMBER%"
                         }
