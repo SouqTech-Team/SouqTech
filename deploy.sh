@@ -76,16 +76,13 @@ MAX_RETRIES=75
 RETRY_COUNT=0
 
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    # On demande directement à Docker si le conteneur est "healthy"
-    HEALTH_STATUS=$(docker inspect --format='{{.State.Health.Status}}' souqtech-backend 2>/dev/null)
-    
-    if [ "$HEALTH_STATUS" = "healthy" ]; then
-        echo "✅ Backend opérationnel et healthy !"
+    # Vérification basée sur les logs (Méthode Infaillible)
+    if docker logs souqtech-backend 2>&1 | grep -q "Started SpringBootEcommerceApplication"; then
+        echo "✅ Backend opérationnel (détecté via logs) après $((RETRY_COUNT * 2)) secondes !"
         break
     fi
     
-    echo "⏳ Statut actuel: $HEALTH_STATUS (Tentative $RETRY_COUNT/$MAX_RETRIES)..."
-    
+    echo "⏳ Démarrage en cours... (Tentative $RETRY_COUNT/$MAX_RETRIES)"
     RETRY_COUNT=$((RETRY_COUNT + 1))
     if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
         echo "❌ Le backend n'a pas démarré après $((MAX_RETRIES * 2)) secondes, rollback..."

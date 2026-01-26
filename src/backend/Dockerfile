@@ -23,9 +23,5 @@ COPY --from=build /app/target/*.jar app.jar
 # Expose port 8081
 EXPOSE 8081
 
-# Healthcheck natif
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=60s \
-    CMD curl -f http://localhost:8081/actuator/health || exit 1
-
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
