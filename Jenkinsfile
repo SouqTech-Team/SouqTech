@@ -3,7 +3,7 @@ pipeline {
 
     triggers {
         githubPush()
-        // pollSCM désactivé - utiliser uniquement les webhooks GitHub
+        pollSCM('* * * * *') // Vérifier les changements toutes les minutes (nécessaire sur localhost)
     }
 
     tools {

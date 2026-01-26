@@ -2,6 +2,7 @@
 
 # Script de déploiement automatique SouqTech
 # Ce script est appelé par Jenkins après le build
+# Version 1.1 - Déclenchement build test
 
 echo "🚀 Démarrage du déploiement SouqTech..."
 
