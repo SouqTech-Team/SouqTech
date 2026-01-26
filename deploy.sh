@@ -76,7 +76,8 @@ MAX_RETRIES=75
 RETRY_COUNT=0
 
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    if docker run --network $NETWORK_NAME --rm curlimages/curl -f http://souqtech-backend:8081/actuator/health > /dev/null 2>&1; then
+    # Vérification interne via docker exec (plus fiable que réseau externe)
+    if docker exec souqtech-backend wget --quiet --tries=1 --spider http://localhost:8081/actuator/health > /dev/null 2>&1; then
         echo "✅ Backend opérationnel après $((RETRY_COUNT * 2)) secondes !"
         break
     fi
