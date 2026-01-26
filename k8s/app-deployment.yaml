@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: souqtech-backend
-  namespace: souqtech
+  name: gestion-produits
+  namespace: gestion-produits
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: souqtech-backend
+      app: gestion-produits
   template:
     metadata:
       labels:
-        app: souqtech-backend
+        app: gestion-produits
     spec:
       containers:
-        - name: backend
+        - name: app
           image: seifeddine77/souqtech-backend:latest
           imagePullPolicy: Always
           ports:
@@ -41,24 +41,22 @@ spec:
                   name: mysql-secret
                   key: MYSQL_PASSWORD
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://$(MYSQL_HOST):3306/$(MYSQL_DATABASE)?allowPublicKeyRetrieval=true&useSSL=false
+              value: jdbc:mysql://$(MYSQL_HOST):3306/$(MYSQL_DATABASE)
             - name: SPRING_DATASOURCE_USERNAME
               value: $(MYSQL_USER)
             - name: SPRING_DATASOURCE_PASSWORD
               value: $(MYSQL_PASSWORD)
             - name: JWT_SECRET
               value: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
-            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-              value: "update"
           readinessProbe:
             httpGet:
               path: /actuator/health
               port: 8081
-            initialDelaySeconds: 45
+            initialDelaySeconds: 30
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /actuator/health
               port: 8081
-            initialDelaySeconds: 90
+            initialDelaySeconds: 60
             periodSeconds: 15

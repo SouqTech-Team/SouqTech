@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: souqtech-backend-service
+  namespace: souqtech
+spec:
+  selector:
+    app: souqtech-backend
+  ports:
+    - port: 80
+      targetPort: 8081
+      nodePort: 30080
+  type: NodePort
