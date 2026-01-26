@@ -22,6 +22,9 @@ public class DataBaseInitializer implements CommandLineRunner {
         @Override
         public void run(String... args) throws Exception {
                 // GPT3.5 generated data
+                if (productCategoryRepository.count() > 0) {
+                        return; // Si des données existent déjà, on ne fait rien pour éviter les doublons
+                }
 
                 ProductCategory categorySmartTv = ProductCategory.builder().name("SmartTv")
                                 .description(CATEGORY_DESCRIPTION).build();
