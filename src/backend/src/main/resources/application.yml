@@ -36,3 +36,20 @@ web:
 jwt:
   secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
   expiration: 86400000 # 24 hours in milliseconds
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus,metrics"
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name:souqtech-backend}
