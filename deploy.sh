@@ -71,8 +71,8 @@ if ! docker run -d \
 fi
 
 # 5. Attendre que le backend démarre avec retry
-echo "⏳ Attente du démarrage du backend..."
-MAX_RETRIES=30
+echo "⏳ Attente du démarrage du backend (max 150s)..."
+MAX_RETRIES=75
 RETRY_COUNT=0
 
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
@@ -85,10 +85,15 @@ while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
         echo "❌ Le backend n'a pas démarré après $((MAX_RETRIES * 2)) secondes, rollback..."
         docker logs --tail 50 souqtech-backend
-        docker stop souqtech-backend
-        docker rm souqtech-backend
-        docker rename souqtech-backend-previous souqtech-backend
-        docker start souqtech-backend
+        docker stop souqtech-backend 2>/dev/null || true
+        docker rm souqtech-backend 2>/dev/null || true
+        
+        # Rollback uniquement si une version précédente existe
+        if docker ps -a --format '{{.Names}}' | grep -q "^souqtech-backend-previous$"; then
+            echo "🔄 Restauration de la version précédente..."
+            docker rename souqtech-backend-previous souqtech-backend
+            docker start souqtech-backend
+        fi
         exit 1
     fi
     
