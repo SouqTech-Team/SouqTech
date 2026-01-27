@@ -11,4 +11,4 @@ spec:
   resources:
     requests:
       storage: 5Gi  # Ajustez selon vos besoins
-  # storageClassName: standard  # Décommentez si vous avez une StorageClass spécifique
+  storageClassName: hostpath  # StorageClass pour Docker Desktop Kubernetes

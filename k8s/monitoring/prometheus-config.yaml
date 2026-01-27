@@ -35,7 +35,7 @@ data:
         metrics_path: '/actuator/prometheus'
         scrape_interval: 5s
         static_configs:
-          - targets: ['souqtech-backend-service.souqtech.svc.cluster.local:80']
+          - targets: ['souqtech-backend-service.souqtech.svc.cluster.local:8081']
         relabel_configs:
           - source_labels: [__address__]
             target_label: instance

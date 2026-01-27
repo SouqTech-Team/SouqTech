@@ -116,20 +116,63 @@ pipeline {
             }
         }
 
-        stage('Deploy to Production') {
+        stage('Deploy to Kubernetes') {
             steps {
-                echo '[INFO] 🚀 Déploiement automatique de l\'application...'
+                echo '[INFO] 🚀 Déploiement sur Kubernetes avec Monitoring...'
                 script {
                     if (isUnix()) {
-                        // Correction des fins de ligne Windows -> Linux (CRLF -> LF)
+                        // Linux/Mac : utiliser le script bash
                         sh "sed -i 's/\\r\$//' deploy.sh"
-                        
-                        // Rendre le script exécutable et le lancer
                         sh 'chmod +x deploy.sh'
                         sh './deploy.sh'
                     } else {
-                        // Windows : utiliser Git Bash ou WSL
-                        bat 'bash deploy.sh'
+                        // Windows : utiliser kubectl directement
+                        echo '[INFO] Déploiement des namespaces...'
+                        bat 'kubectl apply -f k8s/namespace.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/namespace.yaml'
+                        
+                        echo '[INFO] Déploiement des secrets et configs...'
+                        bat 'kubectl apply -f k8s/mysql-secret.yaml'
+                        bat 'kubectl apply -f k8s/mysql-config.yaml'
+                        bat 'kubectl apply -f k8s/jwt-secret.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/grafana-secret.yaml'
+                        
+                        echo '[INFO] Déploiement des volumes persistants...'
+                        bat 'kubectl apply -f k8s/mysql-pvc.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/prometheus-pvc.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/grafana-pvc.yaml'
+                        
+                        echo '[INFO] Déploiement de MySQL...'
+                        bat 'kubectl apply -f k8s/mysql-deployment.yaml'
+                        bat 'kubectl apply -f k8s/mysql-service.yaml'
+                        
+                        echo '[INFO] Déploiement du Backend et Frontend...'
+                        bat 'kubectl apply -f k8s/backend-deployment.yaml'
+                        bat 'kubectl apply -f k8s/backend-service.yaml'
+                        bat 'kubectl apply -f k8s/frontend-deployment.yaml'
+                        
+                        echo '[INFO] Déploiement du Monitoring (Prometheus + Grafana)...'
+                        bat 'kubectl apply -f k8s/monitoring/prometheus-rbac.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/prometheus-config.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/prometheus-deployment.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/prometheus-service.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/grafana-datasource.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/grafana-deployment.yaml'
+                        bat 'kubectl apply -f k8s/monitoring/grafana-service.yaml'
+                        
+                        echo '[INFO] Redémarrage des déploiements pour utiliser les nouvelles images...'
+                        bat 'kubectl rollout restart deployment/souqtech-backend -n souqtech'
+                        bat 'kubectl rollout restart deployment/souqtech-frontend -n souqtech'
+                        
+                        echo '[INFO] Vérification du statut des pods...'
+                        bat 'kubectl get pods -n souqtech'
+                        bat 'kubectl get pods -n monitoring'
+                        
+                        echo '[SUCCESS] ✅ Déploiement Kubernetes terminé !'
+                        echo '[INFO] Frontend: http://localhost'
+                        echo '[INFO] Backend: http://localhost:30080'
+                        echo '[INFO] Prometheus: http://localhost:30090'
+                        echo '[INFO] Grafana: http://localhost:30300'
                     }
                 }
             }
