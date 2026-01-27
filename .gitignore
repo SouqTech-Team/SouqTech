@@ -21,3 +21,7 @@ dist/
 # Documentation files (for local use only)
 *.md
 !README.md
+
+# Local credentials (do not push)
+alertmanager-config.local.yaml
+*.local.yaml

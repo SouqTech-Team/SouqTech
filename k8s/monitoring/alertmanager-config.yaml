@@ -6,28 +6,23 @@ metadata:
 data:
   alertmanager.yml: |
     global:
-      # Configuration globale
       resolve_timeout: 5m
-      # Configuration SMTP pour les emails (à personnaliser)
-      # smtp_smarthost: 'smtp.gmail.com:587'
-      # smtp_from: 'alertmanager@souqtech.com'
-      # smtp_auth_username: 'your-email@gmail.com'
-      # smtp_auth_password: 'your-app-password'
+      # Configuration SMTP pour Gmail
+      # ⚠️ REMPLACEZ PAR VOS PROPRES CREDENTIALS
+      smtp_smarthost: 'smtp.gmail.com:587'
+      smtp_from: 'YOUR_EMAIL@gmail.com'
+      smtp_auth_username: 'YOUR_EMAIL@gmail.com'
+      smtp_auth_password: 'YOUR_APP_PASSWORD'
+      smtp_require_tls: true
 
-    # Route principale - définit comment les alertes sont groupées et envoyées
+    # Route principale
     route:
-      # Grouper les alertes par ces labels
       group_by: ['alertname', 'severity', 'namespace']
-      # Attendre 30 secondes avant d'envoyer la première notification
       group_wait: 30s
-      # Attendre 5 minutes avant d'envoyer une mise à jour du groupe
       group_interval: 5m
-      # Répéter la notification toutes les 4 heures
       repeat_interval: 4h
-      # Receiver par défaut
       receiver: 'default-receiver'
       
-      # Routes spécifiques selon la sévérité
       routes:
         - match:
             severity: critical
@@ -37,36 +32,60 @@ data:
             severity: warning
           receiver: 'warning-receiver'
 
-    # Configuration des receivers (destinataires des alertes)
+    # Receivers
     receivers:
       - name: 'default-receiver'
-        # Webhook pour les logs (utile pour le debugging)
-        webhook_configs:
-          - url: 'http://localhost:5001/'
+        email_configs:
+          - to: 'YOUR_EMAIL@gmail.com'
             send_resolved: true
+            headers:
+              Subject: '🔔 SouqTech Alert: {{ .Status | toUpper }}'
+        discord_configs:
+          - webhook_url: 'YOUR_DISCORD_WEBHOOK_URL'
+            send_resolved: true
+            title: '{{ if eq .Status "firing" }}🚨 ALERTE{{ else }}✅ RÉSOLUE{{ end }}'
+            message: |
+              {{ range .Alerts }}
+              **{{ .Labels.alertname }}** - {{ .Labels.severity }}
+              {{ .Annotations.summary }}
+              {{ .Annotations.description }}
+              {{ end }}
 
       - name: 'critical-receiver'
-        # Pour les alertes critiques - ajouter email, Slack, etc.
-        webhook_configs:
-          - url: 'http://localhost:5001/'
+        email_configs:
+          - to: 'YOUR_EMAIL@gmail.com'
             send_resolved: true
-        # Exemple Slack (décommenter et configurer):
-        # slack_configs:
-        #   - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
-        #     channel: '#alerts-critical'
-        #     send_resolved: true
-        #     title: '🚨 ALERTE CRITIQUE'
-        #     text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+            headers:
+              Subject: '🚨 CRITIQUE SouqTech: {{ .GroupLabels.alertname }}'
+        discord_configs:
+          - webhook_url: 'YOUR_DISCORD_WEBHOOK_URL'
+            send_resolved: true
+            title: '🚨 ALERTE CRITIQUE'
+            message: |
+              {{ range .Alerts }}
+              **{{ .Labels.alertname }}**
+              Sévérité: {{ .Labels.severity }}
+              {{ .Annotations.summary }}
+              {{ .Annotations.description }}
+              {{ end }}
 
       - name: 'warning-receiver'
-        webhook_configs:
-          - url: 'http://localhost:5001/'
+        email_configs:
+          - to: 'YOUR_EMAIL@gmail.com'
             send_resolved: true
+            headers:
+              Subject: '⚠️ Warning SouqTech: {{ .GroupLabels.alertname }}'
+        discord_configs:
+          - webhook_url: 'YOUR_DISCORD_WEBHOOK_URL'
+            send_resolved: true
+            title: '⚠️ Avertissement'
+            message: |
+              {{ range .Alerts }}
+              **{{ .Labels.alertname }}**
+              {{ .Annotations.summary }}
+              {{ end }}
 
-    # Templates pour les notifications (optionnel)
-    templates: []
-
-    # Règles d'inhibition - supprimer certaines alertes si d'autres sont déjà actives
+    # Règles d'inhibition
     inhibit_rules:
       - source_match:
           severity: 'critical'
