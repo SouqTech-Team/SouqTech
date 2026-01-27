@@ -56,14 +56,15 @@ data:
           - to: 'YOUR_EMAIL@gmail.com'
             send_resolved: true
             headers:
-              Subject: '🚨 CRITIQUE SouqTech: {{ .GroupLabels.alertname }}'
+              Subject: '🚨 CRITIQUE SouqTech: {{ if eq .Status "firing" }}FIRING{{ else }}RESOLVED{{ end }} - {{ .GroupLabels.alertname }}'
         discord_configs:
           - webhook_url: 'YOUR_DISCORD_WEBHOOK_URL'
             send_resolved: true
-            title: '🚨 ALERTE CRITIQUE'
+            title: '{{ if eq .Status "firing" }}🚨 ALERTE CRITIQUE{{ else }}✅ ALERTE RÉSOLUE{{ end }}'
             message: |
               {{ range .Alerts }}
               **{{ .Labels.alertname }}**
+              Statut: {{ if eq .Status "firing" }}🔥 EN COURS{{ else }}✅ RÉTABLI{{ end }}
               Sévérité: {{ .Labels.severity }}
               {{ .Annotations.summary }}
               {{ .Annotations.description }}
@@ -74,14 +75,15 @@ data:
           - to: 'YOUR_EMAIL@gmail.com'
             send_resolved: true
             headers:
-              Subject: '⚠️ Warning SouqTech: {{ .GroupLabels.alertname }}'
+              Subject: '⚠️ Warning SouqTech: {{ if eq .Status "firing" }}FIRING{{ else }}RESOLVED{{ end }} - {{ .GroupLabels.alertname }}'
         discord_configs:
           - webhook_url: 'YOUR_DISCORD_WEBHOOK_URL'
             send_resolved: true
-            title: '⚠️ Avertissement'
+            title: '{{ if eq .Status "firing" }}⚠️ AVERTISSEMENT{{ else }}✅ RÉSOLU{{ end }}'
             message: |
               {{ range .Alerts }}
               **{{ .Labels.alertname }}**
+              Statut: {{ if eq .Status "firing" }}⏳ ATTENTION{{ else }}✅ OK{{ end }}
               {{ .Annotations.summary }}
               {{ end }}
 
