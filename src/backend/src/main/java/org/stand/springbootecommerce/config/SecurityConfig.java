@@ -34,6 +34,8 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/v1/reviews/product/**").permitAll() // Listing
                                                                                                            // reviews is
                                                                                                            // public
+                                                // Monitoring & Actuator
+                                                .requestMatchers("/actuator/**").permitAll()
                                                 // Swagger UI & API Docs
                                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
                                                                 "/swagger-ui.html")
