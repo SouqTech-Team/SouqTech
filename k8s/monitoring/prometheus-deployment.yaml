@@ -65,6 +65,9 @@ spec:
             - name: config
               mountPath: /etc/prometheus
               readOnly: true
+            - name: rules
+              mountPath: /etc/prometheus/rules
+              readOnly: true
             - name: storage
               mountPath: /prometheus
       volumes:
@@ -72,6 +75,11 @@ spec:
           configMap:
             name: prometheus-config
             defaultMode: 420
+        - name: rules
+          configMap:
+            name: prometheus-rules
+            defaultMode: 420
         - name: storage
           persistentVolumeClaim:
-            claimName: prometheus-pvc  # Utilise le PVC au lieu de emptyDir
+            claimName: prometheus-pvc
+

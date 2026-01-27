@@ -12,9 +12,16 @@ data:
         cluster: 'souqtech-cluster'
         environment: 'production'
 
-    # Règles d'alerte (optionnel)
-    # rule_files:
-    #   - '/etc/prometheus/rules/*.yml'
+    # Configuration Alertmanager
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+                - 'alertmanager-service:9093'
+
+    # Règles d'alerte
+    rule_files:
+      - '/etc/prometheus/rules/*.yml'
 
     scrape_configs:
       # ========================================

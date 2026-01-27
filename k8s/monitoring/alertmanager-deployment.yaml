@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: monitoring
+  labels:
+    app: alertmanager
+    component: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+        component: monitoring
+    spec:
+      securityContext:
+        fsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      containers:
+        - name: alertmanager
+          image: prom/alertmanager:v0.26.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9093
+              name: http
+              protocol: TCP
+          args:
+            - "--config.file=/etc/alertmanager/alertmanager.yml"
+            - "--storage.path=/alertmanager"
+            - "--web.external-url=http://localhost:30093"
+            - "--cluster.listen-address="
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 9093
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: 9093
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: config
+              mountPath: /etc/alertmanager
+              readOnly: true
+            - name: storage
+              mountPath: /alertmanager
+      volumes:
+        - name: config
+          configMap:
+            name: alertmanager-config
+            defaultMode: 420
+        - name: storage
+          emptyDir: {}
