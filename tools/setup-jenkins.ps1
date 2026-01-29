@@ -31,19 +31,19 @@ Write-Host "✅ Jenkins est en cours d'exécution" -ForegroundColor Green
 # 1. Configurer les permissions Docker
 Write-Host ""
 Write-Host "🔧 Configuration des permissions Docker..." -ForegroundColor Yellow
-docker exec -u root $JENKINS_CONTAINER chmod 666 /var/run/docker.sock 2>$null
+docker exec -u root $JENKINS_CONTAINER chmod 666 /var/run/docker.sock
 Write-Host "✅ Permissions Docker configurées" -ForegroundColor Green
 
 # 2. Installer kubectl si nécessaire
 Write-Host ""
 Write-Host "🔧 Vérification de kubectl..." -ForegroundColor Yellow
-$kubectlExists = docker exec $JENKINS_CONTAINER which kubectl 2>$null
-if (-not $kubectlExists) {
+try {
+    $kubectlPath = docker exec $JENKINS_CONTAINER which kubectl
+    Write-Host "✅ kubectl déjà installé" -ForegroundColor Green
+} catch {
     Write-Host "📥 Installation de kubectl..." -ForegroundColor Yellow
     docker exec -u root $JENKINS_CONTAINER bash -c "curl -sLO 'https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl' && chmod +x kubectl && mv kubectl /usr/local/bin/"
     Write-Host "✅ kubectl installé" -ForegroundColor Green
-} else {
-    Write-Host "✅ kubectl déjà installé" -ForegroundColor Green
 }
 
 # 3. Configurer kubeconfig
@@ -67,7 +67,7 @@ Write-Host ""
 Write-Host "🔍 Vérification de la connectivité..." -ForegroundColor Yellow
 
 Write-Host -NoNewline "   Docker: "
-$dockerVersion = docker exec $JENKINS_CONTAINER docker version --format '{{.Server.Version}}' 2>$null
+$dockerVersion = docker exec $JENKINS_CONTAINER docker version --format "{{.Server.Version}}"
 if ($dockerVersion) {
     Write-Host "✅ OK ($dockerVersion)" -ForegroundColor Green
 } else {
@@ -75,7 +75,7 @@ if ($dockerVersion) {
 }
 
 Write-Host -NoNewline "   Kubernetes: "
-$k8sCheck = docker exec $JENKINS_CONTAINER kubectl cluster-info 2>$null
+$null = docker exec $JENKINS_CONTAINER kubectl cluster-info
 if ($LASTEXITCODE -eq 0) {
     Write-Host "✅ OK" -ForegroundColor Green
 } else {
