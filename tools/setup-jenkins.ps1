@@ -55,8 +55,8 @@ $KUBE_CONFIG = "$env:USERPROFILE\.kube\config"
 if (Test-Path $KUBE_CONFIG) {
     docker cp $KUBE_CONFIG "${JENKINS_CONTAINER}:/var/jenkins_home/.kube/config"
     docker exec -u root $JENKINS_CONTAINER chown -R jenkins:jenkins /var/jenkins_home/.kube
-    docker exec -u root $JENKINS_CONTAINER sed -i 's/127.0.0.1/host.docker.internal/g' /var/jenkins_home/.kube/config
-    docker exec -u root $JENKINS_CONTAINER sed -i 's/localhost/host.docker.internal/g' /var/jenkins_home/.kube/config
+    docker exec -u root ${JENKINS_CONTAINER} sed -i "s/127.0.0.1/host.docker.internal/g" /var/jenkins_home/.kube/config
+    docker exec -u root ${JENKINS_CONTAINER} sed -i "s/localhost/host.docker.internal/g" /var/jenkins_home/.kube/config
     Write-Host "✅ kubeconfig configuré" -ForegroundColor Green
 } else {
     Write-Host "⚠️ kubeconfig non trouvé à $KUBE_CONFIG" -ForegroundColor Yellow

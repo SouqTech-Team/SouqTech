@@ -78,5 +78,5 @@ Le projet suit les meilleures pratiques de développement :
 **Réalisé par l'équipe SouqTech** - * Selmi Houssem  - Rezgui Seif Eddine *
 
 ---
-*Dernière mise à jour : Test CI/CD avec Jenkins Docker fix - 15 Janvier 2026 19:07*
+*Derniere mise a jour : 31 Janvier 2026*
 
